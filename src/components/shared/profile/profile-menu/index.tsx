@@ -88,7 +88,8 @@ const ProfileMenu: React.FC<ProfileMenuProps> = (props) => {
   const { disconnectAccount } = useWalletHook();
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const { isConnected } = useAppSelector((state) => state.webAppReducer);
+  // const { isConnected } = useAppSelector((state) => state.webAppReducer);
+  const isConnected = true;
 
   const dispatch = useAppDispatch();
 

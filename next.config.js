@@ -8,15 +8,6 @@ const nextConfig = {
   images: {
     domains: ['res.cloudinary.com', 'ipfs.loopring.io'],
   },
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/',
-        permanent: true,
-      },
-    ];
-  },
 };
 
 module.exports = nextConfig;
