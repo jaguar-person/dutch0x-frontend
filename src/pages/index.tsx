@@ -8,12 +8,12 @@ import {
 } from '@/components/create/shared/DepositModal';
 
 export default function Dashboard() {
-  return (
-    <div>
-      <DepositInProcessModal />
-      {/* <DespositFromWalletModal />; */}
-    </div>
-  );
-  // if (isMobile) return <MobileDashboardPage />;
-  // else return <DesktopDashboardPage />;
+  // return (
+  //   <div>
+  //     <DepositInProcessModal />
+  //     {/* <DespositFromWalletModal />; */}
+  //   </div>
+  // );
+  if (isMobile) return <MobileDashboardPage />;
+  else return <DesktopDashboardPage />;
 }
