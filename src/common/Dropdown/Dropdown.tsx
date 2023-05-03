@@ -1,5 +1,4 @@
 import React, { useState, useCallback, SyntheticEvent } from 'react';
-import { useDetectClickOutside } from 'react-detect-click-outside';
 import { useTheme } from 'next-themes';
 
 // components
@@ -20,8 +19,6 @@ interface DropdownProps {
   onSelect: (value: string, index: number) => void;
 }
 
-// const mock_options = ['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a'];
-
 const Dropdown: React.FC<DropdownProps> = ({
   value = 'Color',
   options = [],
@@ -36,11 +33,6 @@ const Dropdown: React.FC<DropdownProps> = ({
     setOpen((open) => !open);
   }, []);
 
-  const handleClose = useCallback((e: Event) => {
-    e.stopPropagation();
-    setOpen(false);
-  }, []);
-
   const handleClickOption = useCallback(
     (value: string, index: number) => {
       onSelect(value, index);
@@ -48,10 +40,8 @@ const Dropdown: React.FC<DropdownProps> = ({
     [onSelect]
   );
 
-  const ref = useDetectClickOutside({ onTriggered: handleClose });
-
   return (
-    <DutchC.DropdownWrapper onClick={handleToggle} ref={ref}>
+    <DutchC.DropdownWrapper onClick={handleToggle}>
       {!!open && (
         <DutchC.DropdownBackWrapper
           onClick={(e: SyntheticEvent) => {
@@ -72,18 +62,18 @@ const Dropdown: React.FC<DropdownProps> = ({
           />
         </DutchC.DropdownIconWrapper>
         {/* dropdown options */}
-        {open && (
-          <DutchC.DropdownList position={position}>
+        <div>
+          <DutchC.DropdownList position={position} isOpen={open}>
             {options.map((option, index) => (
               <DutchC.DropdownListItem
-                key={option}
+                key={index}
                 onClick={() => handleClickOption(option, index)}
               >
                 {option}
               </DutchC.DropdownListItem>
             ))}
           </DutchC.DropdownList>
-        )}
+        </div>
       </DutchC.DropdownInner>
     </DutchC.DropdownWrapper>
   );

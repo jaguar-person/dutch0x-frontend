@@ -26,7 +26,7 @@ const Button: React.FC<ButtonProps> = ({
   className,
   ref,
   loading,
-  disabled,
+  disabled = false,
   ...rest
 }) => {
   const LeftIcon = leftIcon ? icons[leftIcon] : null;

@@ -4,6 +4,7 @@ import { DropdownPositionVariants } from '@/types';
 // types
 type DropdownListProps = {
   position: DropdownPositionVariants;
+  isOpen: boolean;
 };
 
 type DropdownInnerProps = {
@@ -13,11 +14,12 @@ type DropdownInnerProps = {
 // components
 // --- Dropdown(default)
 export const DropdownWrapper = styled.div.attrs({
-  className: 'flex flex-col w-full gap-1 cursor-pointer z-40',
+  className: 'flex flex-col w-full gap-1 cursor-pointer',
 })``;
 
 export const DropdownBackWrapper = styled.div.attrs({
-  className: 'fixed h-screen w-screen bg-transparent z-0',
+  className:
+    'fixed h-screen w-screen overflow-hidden bg-transparent z-0 left-0 top-10',
 })``;
 
 export const DropdownLabel = styled.label.attrs({
@@ -42,7 +44,7 @@ export const DropdownIconWrapper = styled.div.attrs({
 
 export const DropdownList = styled.div.attrs({
   className:
-    'absolute flex flex-col p-1 w-full max-h-[150px] overflow-auto bg-white rounded-md z-40',
+    'absolute flex flex-col p-1 w-full max-h-[150px] overflow-hidden overflow-y-auto bg-white rounded-md z-40',
 })`
   box-shadow: 0px 2px 4px rgba(30, 41, 59, 0.25);
   backdrop-filter: blur(16px);
@@ -53,6 +55,7 @@ export const DropdownList = styled.div.attrs({
     p.position === 'TL'
       ? 'bottom: 0; left: 0; margin-bottom: 4px; transform: translateY(-40px);'
       : ''}
+  ${(p: DropdownListProps) => (!p.isOpen ? 'display:none' : '')}
 `;
 
 export const DropdownListItem = styled.div.attrs({

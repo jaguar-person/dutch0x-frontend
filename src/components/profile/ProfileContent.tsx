@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import AvatarIcon from '@/assets/avatar.png';
 import ProfileCardTemplate from '../shared/profile/ProfileCardTemplate';
 import ProfileActions from '../shared/profile/ProfileActions';
-import { Button, OutlineButton, TextInput } from '@/common';
+import { Button, OutlineButton, Select, TextInput } from '@/common';
 import { InputLabel } from '@/common/Input/styles';
 import CheckIcon from '@/assets/check.png';
 import ProfileSocialIcon from '../shared/profile/ProfileSocialIcon';
-import Select from '@/common/Input/Select';
 
 import DiscordIcon from '@/assets/social_discord.png';
 import RedditIcon from '@/assets/social_reddit.png';
@@ -22,21 +21,22 @@ import * as DutchC from './styles';
 
 import { Logout } from './alert-modals';
 import { PhotoEdit } from './photo-edit-modal';
+import DepositFundModal from '../create/minting/DepositFundModal';
 
 import { useAppDispatch } from '@/redux/store';
 import { setDepositModalIsOpen } from '../create/ducks';
-import DepositFundModal from '../create/shared/MintingModal/DepositFundModal';
-
-const timeOptions = [
-  {
-    key: 'Africa',
-    value: '(GMT +01.00) Africa/Algiers',
-  },
-];
+import ContentMinting from '../create/minting/mint-modal-body/minting-content/ContentMinting';
+import getTimezones from '@/helpers/timezones';
 
 const ProfileContent: React.FC = () => {
   const [isLogout, setLogout] = useState(false);
   const [isPhotoEdit, setPhotoEdit] = useState(false);
+  const [timezones, setTimezones] = useState([] as string[]);
+
+  useEffect(() => {
+    setTimezones(getTimezones());
+  }, []);
+
   const dispatch = useAppDispatch();
 
   return (
@@ -70,7 +70,13 @@ const ProfileContent: React.FC = () => {
               </DutchC.ProfileSettingInnerLine>
               <DutchC.ProfileSettingInnerLine>
                 <InputLabel>Timezone</InputLabel>
-                <Select options={timeOptions} />
+                <select className="w-full my-1 p-2 rounded-md text-sm ">
+                  {timezones?.map((timezone) => (
+                    <option key={timezone} value={timezone}>
+                      {timezone}
+                    </option>
+                  ))}
+                </select>
               </DutchC.ProfileSettingInnerLine>
             </DutchC.ProfileSettingInner>
           </DutchC.ProfileSettingWrapper>

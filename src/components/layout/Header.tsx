@@ -93,10 +93,6 @@ const Header: React.FC = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   }, [setTheme, theme]);
 
-  const openConnectionModal = () => {
-    dispatch(setIsConnectionModalOpen(true));
-  };
-
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -144,11 +140,11 @@ const Header: React.FC = () => {
 
         <DutchC.RightActions>
           <Badge variant="dot" label="STATUS" />
-
+          {/* 
           <IconButton
             icon={theme === 'light' ? 'moon' : 'sun'}
             onClick={toggleTheme}
-          />
+          /> */}
 
           {(isConnected && <GasInfo {...GasInfoMockData} />) || (
             <DutchC.HeaderGasWrapper>
