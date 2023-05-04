@@ -37,10 +37,7 @@ const MintModalHead: React.FC<MintModalHeadProps> = ({
           ? 'Approve Wallet Signature'
           : 'Minting'
       }
-      onClose={() => {
-        dispatch(setMintModalIsOpen(false));
-        dispatch(setDepositModalIsOpen(false));
-      }}
+      onClose={() => dispatch(setMintModalIsOpen(false))}
       onBack={() => onMintModalClose(selectedDraftNFTs[0].collection)}
     />
   );

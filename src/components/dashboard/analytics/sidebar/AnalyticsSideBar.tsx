@@ -5,10 +5,17 @@ import { Unit } from './unit';
 import { OptionSwitch } from '../option-switch';
 import { useAppDispatch, useAppSelector } from '@/redux/store';
 import { shallowEqual } from 'react-redux';
-import { TrackListI, TrackListTypeEnum, setTrackList } from '../../ducks';
+import {
+  DashboardPageReducerI,
+  TrackListI,
+  TrackListTypeEnum,
+  setTrackList,
+} from '../../ducks';
 import { LoopringService } from '@/lib/LoopringService';
 
 import * as DutchC from './styles';
+import useCollectionHook from '@/hooks/useCollectionHook';
+import { WebAppReducerI } from '@/ducks';
 
 const options = [
   {
@@ -22,44 +29,38 @@ const options = [
 ];
 
 interface AnalyticsSideBarProps {
-  currentTracking: number;
   onCurrentTracking: (currentValue: string) => void;
 }
 
 const AnalyticsSideBar: React.FC<AnalyticsSideBarProps> = ({
-  currentTracking,
   onCurrentTracking,
 }) => {
-  const { isConnected } = useAppSelector((state) => state.webAppReducer);
+  const { getUserCollectionNFTs } = useCollectionHook();
 
   const [trackBy, setTrackBy] = useState({
     id: 0,
     slug: 'Collections',
   });
-  const [currentCrypto, setCurrentCrypto] = useState('0');
-  const [currentFiat, setCurrentFiat] = useState('0');
 
-  const loopringService = new LoopringService();
   const dispatch = useAppDispatch();
 
-  const { accountInfo, userCollection } = useAppSelector((state) => {
-    const { accountInfo, userCollection } = state.webAppReducer;
-    return { accountInfo, userCollection };
+  const { account, isConnected, userCollection } = useAppSelector((state) => {
+    const { account, isConnected, userCollection } =
+      state.webAppReducer as WebAppReducerI;
+    return { account, isConnected, userCollection };
   }, shallowEqual);
 
   const { trackList } = useAppSelector((state) => {
-    const { trackList } = state.dashboardPageReducer;
+    const { trackList } = state.dashboardPageReducer as DashboardPageReducerI;
     return { trackList };
   }, shallowEqual);
 
   useEffect(() => {
     (async () => {
       try {
-        if (!accountInfo) return;
-
         let list: TrackListI[] = [];
         if (trackBy.id === 0) {
-          list = userCollection.map((item: any, i: number) => {
+          list = userCollection.map((item, i) => {
             const isSelected = i === 0;
             return {
               id: item.collectionAddress,
@@ -71,28 +72,27 @@ const AnalyticsSideBar: React.FC<AnalyticsSideBarProps> = ({
             };
           });
         } else {
-          const collectionAddresses = userCollection.map(
-            (item: any) => item.collectionAddress
-          );
-          const nftsInfo = await loopringService.getUserNFTCollection({
-            tokensAddress: collectionAddresses,
-            offset: 0,
-            limit: 50,
-          });
+          const collectionAddresses = userCollection
+            .map((item) => item.collectionAddress)
+            .join(',');
 
-          // if (nftsInfo && nftsInfo.nfts && nftsInfo.nfts.length > 0) {
-          //   list = nftsInfo.nfts.map((item, i) => {
-          //     const isSelected = i === 0;
-          //     return {
-          //       id: item.nftId,
-          //       type: TrackListTypeEnum.NFT,
-          //       avatar: item.metadata.image,
-          //       title: item.metadata.name,
-          //       content: '',
-          //       isSelected: isSelected,
-          //     };
-          //   });
-          // }
+          const nftsInfo = await getUserCollectionNFTs(
+            String(account),
+            collectionAddresses
+          );
+
+          console.log({ nftsInfo });
+
+          if (nftsInfo) {
+            list = nftsInfo.map((item, i) => ({
+              id: item.nftID,
+              type: TrackListTypeEnum.NFT,
+              avatar: item.metadata.image,
+              title: item.metadata.name,
+              content: '',
+              isSelected: i === 0,
+            }));
+          }
         }
         dispatch(setTrackList(list));
       } catch (error) {}
@@ -106,7 +106,7 @@ const AnalyticsSideBar: React.FC<AnalyticsSideBarProps> = ({
   const handleSelected = (id: number) => {
     dispatch(
       setTrackList(
-        trackList.map((item: any, i: number) => {
+        trackList.map((item, i) => {
           if (i === id)
             return {
               ...item,
@@ -123,6 +123,8 @@ const AnalyticsSideBar: React.FC<AnalyticsSideBarProps> = ({
     setTrackBy(option);
   };
 
+  console.log({ trackList });
+
   return (
     <DutchC.SideBarWrapper>
       <DutchC.SideBarBg />
@@ -130,7 +132,9 @@ const AnalyticsSideBar: React.FC<AnalyticsSideBarProps> = ({
         <DutchC.SideBarHeader>
           <DutchC.SideBarHeaderText>Analytics</DutchC.SideBarHeaderText>
           <Select
-            className="border-none w-full flex-grow"
+            className={`border-none w-full flex-grow ${
+              isConnected ? 'visible' : 'invisible'
+            }`}
             options={[
               { key: '0', value: 'NFT Tracking' },
               { key: '1', value: 'Wallet Tracking' },
@@ -140,74 +144,67 @@ const AnalyticsSideBar: React.FC<AnalyticsSideBarProps> = ({
         </DutchC.SideBarHeader>
         <DutchC.SideBarBody>
           <DutchC.CurrencySelect>
-            <Select
-              className="border-none w-full flex-grow"
-              options={[
-                { key: '0', value: 'Crypto: ETH' },
-                { key: '1', value: 'Crypto: LRC' },
-                { key: '2', value: 'Crypto: USDC' },
-              ]}
-              onChange={(e) => {
-                setCurrentCrypto(e.target.value);
-              }}
-            />
+            <Accordion
+              label=""
+              className={isConnected ? 'visible' : 'invisible'}
+            >
+              <DutchC.AccordionContent>
+                <p>Crypto:</p>
+                <p className="font-medium">ETH</p>
+              </DutchC.AccordionContent>
+            </Accordion>
           </DutchC.CurrencySelect>
           <DutchC.CurrencySelect>
-            <Select
-              className="border-none w-full flex-grow"
-              options={[
-                { key: '0', value: 'Fiat: USD' },
-                { key: '1', value: 'Fiat: EURO' },
-              ]}
-              onChange={(e) => {
-                setCurrentFiat(e.target.value);
-              }}
-            />
+            <Accordion
+              label=""
+              className={isConnected ? 'visible' : 'invisible'}
+            >
+              <DutchC.AccordionContent>
+                <p>Fiat:</p>
+                <p className="font-medium">USD</p>
+              </DutchC.AccordionContent>
+            </Accordion>
           </DutchC.CurrencySelect>
           <DutchC.TrackWrapper>
             <p className="text-sm text-black/70 dark:text-white/70">
               Track by:
             </p>
-            {!currentTracking && (
-              <div className="border border-black/10 dark:border-white/10 rounded-lg bg-black/5 dark:bg-white/5">
-                <DutchC.TrackSwitchWrapper>
-                  {options.map((option, i) => (
-                    <OptionSwitch
-                      key={i}
-                      currentOption={trackBy}
-                      option={option}
-                      onCurrentOption={(option) => {
-                        setTrackBy(option);
-                      }}
-                    />
-                  ))}
-                </DutchC.TrackSwitchWrapper>
-              </div>
-            )}
-            <SearchInput
-              placeholder={
-                currentTracking
-                  ? 'Wallet address or ENS'
-                  : 'Collection name or id'
-              }
-            />
-            <DutchC.TrackListWrapper>
-              {!!trackList &&
-                trackList.map((item: TrackListI, i: number) => (
-                  <Unit
+            <div className="border border-black/10 dark:border-white/10 rounded-lg bg-black/5 dark:bg-white/5">
+              <DutchC.TrackSwitchWrapper
+                className={isConnected ? 'visible' : 'invisible'}
+              >
+                {options.map((option, i) => (
+                  <OptionSwitch
                     key={i}
-                    id={i}
-                    avatar={item.avatar}
-                    title={item.title}
-                    content={item.content}
-                    isSelected={item.isSelected}
-                    onSelected={handleSelected}
+                    currentOption={trackBy}
+                    option={option}
+                    onCurrentOption={(option) => {
+                      setTrackBy(option);
+                    }}
                   />
                 ))}
+              </DutchC.TrackSwitchWrapper>
+            </div>
+            <SearchInput
+              placeholder="Collection name or id"
+              className={isConnected ? 'visible' : 'invisible'}
+            />
+            <DutchC.TrackListWrapper>
+              {trackList.map((item, i) => (
+                <Unit
+                  key={i}
+                  id={i}
+                  avatar={item.avatar}
+                  title={item.title}
+                  content={item.content}
+                  isSelected={item.isSelected}
+                  onSelected={handleSelected}
+                />
+              ))}
             </DutchC.TrackListWrapper>
           </DutchC.TrackWrapper>
           <DutchC.DownloadFullReport>
-            <div className="p-1">
+            <div className={`p-1 ${isConnected ? 'visible' : 'invisible'}`}>
               <Button className="w-full">Download full report</Button>
             </div>
             <p className="text-black/50 text-xs dark:text-white/50">

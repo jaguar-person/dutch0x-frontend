@@ -12,10 +12,12 @@ import { useAppDispatch, useAppSelector } from '@/redux/store';
 import { shallowEqual } from 'react-redux';
 import { LoopringService } from '@/lib/LoopringService';
 import {
+  CreatePageReducerI,
   setMintModalActiveStep,
   setMintModalIsOpen,
 } from '@/components/create/ducks';
 import { DraftNFTI } from '@/types';
+import { WebAppReducerI } from '@/ducks';
 
 interface ContentMintFeePropsI {
   isDepositFund: boolean;
@@ -48,23 +50,22 @@ const ContentMintFee: React.FC<ContentMintFeePropsI> = ({
   const loopringService = new LoopringService();
   const dispatch = useAppDispatch();
 
-  const { accountInfo } = useAppSelector((state) => {
-    const { accountInfo } = state.webAppReducer;
-    return { accountInfo };
+  const { account } = useAppSelector((state) => {
+    const { account } = state.webAppReducer as WebAppReducerI;
+    return { account };
   }, shallowEqual);
 
   const { selectedDraftNFTs } = useAppSelector((state) => {
-    const { selectedDraftNFTs } = state.createPageReducer;
+    const { selectedDraftNFTs } = state.createPageReducer as CreatePageReducerI;
     return { selectedDraftNFTs };
   }, shallowEqual);
 
   useEffect(() => {
     (async () => {
-      if (!accountInfo) return null;
       const feeList = await Promise.all(
-        selectedDraftNFTs.map(async (nft: DraftNFTI) => {
+        selectedDraftNFTs.map(async (nft) => {
           const collectionMeta = await loopringService.getCollectionMeta(
-            accountInfo
+            nft.collection
           );
           if (!collectionMeta) return null;
 
@@ -88,14 +89,20 @@ const ContentMintFee: React.FC<ContentMintFeePropsI> = ({
       }, 0);
 
       const userBalance = await loopringService.getLayer2Balance();
-      const userEthBalance = ethers.utils.formatUnits(userBalance[0].total, 18);
 
-      setBalanceCheck({
-        totalBalance: userEthBalance,
-        isDisabled: totalFee > Number(userEthBalance),
-      });
+      if (userBalance) {
+        const userEthBalance = ethers.utils.formatUnits(
+          userBalance[0].total,
+          18
+        );
+
+        setBalanceCheck({
+          totalBalance: userEthBalance,
+          isDisabled: totalFee > Number(userEthBalance),
+        });
+      }
     })();
-  }, [accountInfo, selectedDraftNFTs.length]);
+  }, [selectedDraftNFTs.length]);
 
   const onClose = () => {
     dispatch(setMintModalActiveStep(0));
