@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { IArrowTrendingUp, IArrowTrendingDown } from '@/common';
 import { LRCIconSelector } from '../analytics-tables/lrc-icon-selector';
-import { v4 as uuidv4 } from 'uuid';
 
 import * as DutchC from './styles';
 
@@ -24,11 +23,8 @@ const CurrenciesInvolvedCard: React.FC<CurrenciesInvolvedCardProps> = ({
     <DutchC.AnalyticsCardWrapper className={className}>
       <p className="text-sm text-black/50">Currencies Involved</p>
       <div>
-        {data.map((item) => (
-          <div
-            key={uuidv4()}
-            className="flex gap-1 items-center justify-between"
-          >
+        {data.map((item, index) => (
+          <div key={index} className="flex gap-1 items-center justify-between">
             <div className="w-[50px] ">{item?.token}</div>
             <div className="flex items-center gap-2 text-sm">
               <LRCIconSelector id={item.tokenId} />
