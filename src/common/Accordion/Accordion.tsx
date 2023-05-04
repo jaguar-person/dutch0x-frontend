@@ -3,7 +3,7 @@ import { useDetectClickOutside } from 'react-detect-click-outside';
 import { IChevronDown } from '../Icons';
 
 const Accordion: React.FC<{
-  label: string;
+  label?: string;
   children: React.ReactNode;
   className?: string;
 }> = ({ children, className, label }) => {

@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+
 import { Table, THead, TBody, TR, TD } from '@/common';
 
 import {
@@ -6,12 +8,13 @@ import {
 } from '@/components/shared/shortcut-context-menu';
 import { UserListI } from '@/types';
 import NFTMultiCard from '../../cards/nft-multi-card';
-import * as DutchC from './styles';
 
 const NFTListTable: React.FC<{
   nftMultiList: UserListI[];
   onShowListModal: () => void;
 }> = ({ nftMultiList, onShowListModal }): JSX.Element => {
+  const router = useRouter();
+
   return (
     <Table>
       <THead>
@@ -27,7 +30,7 @@ const NFTListTable: React.FC<{
           return (
             <TR key={i} className="cursor-pointer" onClick={onShowListModal}>
               <TD>
-                <DutchC.NFTListTableName>
+                <div className="flex gap-2 justify-between items-center">
                   <div>{list.listName}</div>
                   <div className="flex gap-2">
                     <NFTMultiCard
@@ -37,7 +40,7 @@ const NFTListTable: React.FC<{
                       onShowListModal={onShowListModal}
                     />
                   </div>
-                </DutchC.NFTListTableName>
+                </div>
               </TD>
               <TD>{list.collectionName}</TD>
               <TD>{list.imageUrls.length}</TD>
@@ -48,19 +51,20 @@ const NFTListTable: React.FC<{
                     <ShortcutContextMenuItem
                       text="Find Holders"
                       onClick={() => {
-                        console.log('234567890');
+                        router.push('/dashboard/holders');
                       }}
                     />
                     <ShortcutContextMenuItem
                       text="Show Sales"
                       onClick={() => {
-                        console.log('234567890');
+                        router.push('/dashboard/analytics');
                       }}
                     />
                     <ShortcutContextMenuItem
                       text="Move to Achieves"
                       onClick={() => {
-                        console.log('234567890');
+                        // control
+                        router.push('/dashboard/nft-management/archive');
                       }}
                     />
                   </ShortcutContextMenu>

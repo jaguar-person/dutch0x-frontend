@@ -254,6 +254,16 @@ const WalletTracking = () => {
               onChange={(currentHolding: any) => {
                 setCurrentHolding(currentHolding);
               }}
+              switchOptions={[
+                {
+                  id: 0,
+                  slug: 'Currency',
+                },
+                {
+                  id: 1,
+                  slug: 'NFTs',
+                },
+              ]}
             />
             <div className="relative w-full">
               {!mockDataHolding.length && (
@@ -261,7 +271,7 @@ const WalletTracking = () => {
                   No data available
                 </div>
               )}
-              <Table className="dark:text-white text-black border rounded-xl table-fixed min-h-[100px]">
+              <Table className="dark:text-white text-black border rounded-xl table-fixed">
                 <THead className="!text-black/100 dark:!text-white/100 bg-black/10 dark:bg-white/10">
                   <TR>
                     <TD>Token</TD>

@@ -24,16 +24,16 @@ const CurrenciesInvolvedCard: React.FC<CurrenciesInvolvedCardProps> = ({
       <p className="text-sm text-black/50">Currencies Involved</p>
       <div>
         {data.map((item, index) => (
-          <>
-            <div className="flex gap-1 items-center justify-between">
-              <div className="w-[50px] ">{item?.token}</div>
-              <div className="flex items-center gap-2">
-                <LRCIconSelector id={item.tokenId} />
-                {item.value}
-              </div>
-              <div className="text-opacity-50 text-right">${item.price}</div>
+          <div key={index} className="flex gap-1 items-center justify-between">
+            <div className="w-[50px] ">{item?.token}</div>
+            <div className="flex items-center gap-2 text-sm">
+              <LRCIconSelector id={item.tokenId} />
+              {item.value}
             </div>
-          </>
+            <div className="text-opacity-50 text-right text-sm">
+              ${item.price}
+            </div>
+          </div>
         ))}
       </div>
     </DutchC.AnalyticsCardWrapper>

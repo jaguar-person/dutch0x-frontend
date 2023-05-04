@@ -12,7 +12,16 @@ import {
   AnalyticsTableControl,
   AnalyticsTableLayout,
 } from '../analytics-tables';
-import { Table, THead, TBody, TR, TD } from '@/common';
+import {
+  Table,
+  THead,
+  TBody,
+  TR,
+  TD,
+  CustomSelect,
+  SearchInput,
+  Pagination,
+} from '@/common';
 import { LRCIconSelector } from '../analytics-tables/lrc-icon-selector';
 import * as Icons from '@/common/Icons';
 
@@ -51,6 +60,7 @@ interface DataType {
   value?: number;
   gas?: { value: number; id: string };
   time: string;
+  link: string;
 }
 
 const mockDataTable: DataType[] = [
@@ -65,6 +75,7 @@ const mockDataTable: DataType[] = [
     value: 234.34,
     gas: { value: 234.34, id: 'usdt' },
     time: 'Mar 10, 20223 06:57:59',
+    link: '/111',
   },
   {
     dir: 'out',
@@ -77,6 +88,7 @@ const mockDataTable: DataType[] = [
     sold: { value: 234.34, id: 'eth' },
     gas: { value: 234.34, id: 'eth' },
     time: 'Mar 10, 20223 06:57:59',
+    link: '/111',
   },
   {
     dir: 'out',
@@ -89,6 +101,7 @@ const mockDataTable: DataType[] = [
     value: 234.34,
     gas: { value: 234.34, id: 'usdt' },
     time: 'Mar 10, 20223 06:57:59',
+    link: '/111',
   },
   {
     dir: 'in',
@@ -101,6 +114,58 @@ const mockDataTable: DataType[] = [
     sold: { value: 234.34, id: 'usdc' },
     value: 234.34,
     time: 'Mar 10, 20223 06:57:59',
+    link: '/111',
+  },
+];
+
+const selectOptions = [
+  {
+    name: 'All Transactions',
+    value: 'All Transactions',
+  },
+  {
+    name: 'Deposit',
+    value: 'Deposit',
+  },
+  {
+    name: 'Trade',
+    value: 'Trade',
+  },
+  {
+    name: 'Withdrawal',
+    value: 'Withdrawal',
+  },
+  {
+    name: 'Royality',
+    value: 'Royality',
+  },
+  {
+    name: 'Swap',
+    value: 'Swap',
+  },
+  {
+    name: 'Transfer',
+    value: 'Transfer',
+  },
+  {
+    name: 'NFT Mint',
+    value: 'NFT Mint',
+  },
+  {
+    name: 'NFT Transfer',
+    value: 'NFT Transfer',
+  },
+  {
+    name: 'NFT Trade',
+    value: 'NFT Trade',
+  },
+  {
+    name: 'NFT Primary Sale',
+    value: 'NFT Primary Sale',
+  },
+  {
+    name: 'Other',
+    value: 'Other',
   },
 ];
 
@@ -121,6 +186,12 @@ const InOrOut: React.FC<{ value: string }> = ({ value }) => {
 };
 
 export const WalletTrackingTransactionView = () => {
+  const [dateRange, setDateRange] = useState('Apr 1, 2022 - Mar 31 2023');
+  const [totalPage, setTotalPage] = useState(3);
+  const [selectTrackingValue, setSelectTrackingValue] =
+    useState('NFT Tracking');
+  const [resultNumber, setResultNumber] = useState(0);
+  const [searchInputValue, setSearchInputValue] = useState('');
   const [timezone, setTimezone] = useState('EST');
   const [currentDayOption, setCurrentDayOption] = useState({
     id: 4,
@@ -172,6 +243,32 @@ export const WalletTrackingTransactionView = () => {
             <p className="text-xs text-black/70">
               The tracking shown is according to the timeline selected.
             </p>
+          </div>
+        </div>
+        <div className="flex items-center justify-between gap-x-2 py-2">
+          <div className="flex items-center gap-x-2">
+            <CustomSelect
+              label="Type"
+              options={selectOptions}
+              value={selectTrackingValue}
+              onChange={(value) => setSelectTrackingValue(value)}
+            />
+          </div>
+          <div className="flex items-center gap-x-4">
+            <div className="text-sm text-black/70 font-normal dark:text-white/70 whitespace-nowrap inline-flex items-center justify-center">
+              {resultNumber} results
+            </div>
+            <SearchInput
+              placeholder={'Wallet id or ENS'}
+              value={searchInputValue}
+              onChange={(e) => {
+                setSearchInputValue(e.currentTarget.value);
+              }}
+            />
+            <Pagination
+              onChange={(value) => console.log(value)}
+              totalPage={totalPage}
+            />
           </div>
         </div>
         <div className="cards flex flex-col gap-2">
@@ -277,8 +374,8 @@ export const WalletTrackingTransactionView = () => {
                   <TD>To</TD>
                   <TD>Bought (In)</TD>
                   <TD>Sold (Out)</TD>
-                  <TD>Value</TD>
-                  <TD>Gas</TD>
+                  <TD className="text-right">Value</TD>
+                  <TD className="text-right">Gas</TD>
                   <TD>Time({timezone})</TD>
                 </TR>
               </THead>
@@ -302,7 +399,7 @@ export const WalletTrackingTransactionView = () => {
                       </div>
                     </TD>
                     <TD>
-                      <div className="flex items-center gap-x-1">
+                      <div className="flex items-center gap-x-1 justify-end">
                         {(item?.bought && (
                           <>
                             {item.bought?.value}
@@ -313,7 +410,7 @@ export const WalletTrackingTransactionView = () => {
                       </div>
                     </TD>
                     <TD>
-                      <div className="flex items-center gap-x-1">
+                      <div className="flex items-center gap-x-1 justify-end">
                         {(item?.sold && (
                           <>
                             {item.sold?.value}
@@ -323,9 +420,11 @@ export const WalletTrackingTransactionView = () => {
                           '-'}
                       </div>
                     </TD>
-                    <TD> {(item?.value && '$ ' + item.value) || '-'}</TD>
+                    <TD className="text-right">
+                      {(item?.value && '$ ' + item.value) || '-'}
+                    </TD>
                     <TD>
-                      <div className="flex items-center gap-x-1">
+                      <div className="flex items-center gap-x-1 justify-end">
                         {(item?.gas && (
                           <>
                             {item.gas?.value}
@@ -335,7 +434,12 @@ export const WalletTrackingTransactionView = () => {
                           '-'}
                       </div>
                     </TD>
-                    <TD>{item.time}</TD>
+                    <TD className="flex items-center gap-x-1">
+                      {item.time}
+                      <Link href={item.link} className="hover:bg-black/">
+                        <Icons.IArrowUpRight className="text-black dark:text-white w-5 h-5 border bg-black/5 dark:bg-white/5 rounded-md" />
+                      </Link>
+                    </TD>
                   </TR>
                 ))}
               </TBody>
