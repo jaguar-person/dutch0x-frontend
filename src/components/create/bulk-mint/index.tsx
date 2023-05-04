@@ -30,14 +30,13 @@ import { pinFileToIPFS } from '@/lib/pinata';
 import { useAppDispatch } from '@/redux/store';
 import { setMintModalIsOpen, setSelectedDraftNFTs } from '../ducks';
 import { handleNFTPropertiesFromFolder } from '@/lib/metadata';
+import PreviewTable from './PreviewTable';
 
 const CreateBulkMintHome: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const { theme } = useTheme();
-  const { createDraftNFT } = useNFTHook();
+  const { upsertDraftNFT } = useNFTHook();
 
-  const [open, setOpen] = useState(true);
   const [isSavingToDraft, setIsSavingToDraft] = useState<boolean>(false);
   const [isMintingNft, setIsMintingNft] = useState<boolean>(false);
   const [selectedCollectionAddress, setSelectedCollectionAddress] =
@@ -47,10 +46,6 @@ const CreateBulkMintHome: React.FC = () => {
   const [selectedCSVFileContent, setSelectedCSVFileContent] = useState<
     CSVMetadataI[]
   >([]);
-
-  const toggleGuide = () => {
-    setOpen((open) => !open);
-  };
 
   const handleSaveToDraft = async () => {
     if (selectedCSVFileContent.length !== imageUrls.length) {
@@ -68,7 +63,7 @@ const CreateBulkMintHome: React.FC = () => {
           csvFileContent.properties
         );
 
-        return await createDraftNFT({
+        return await upsertDraftNFT({
           properties: JSON.stringify(properties),
           collection: selectedCollectionAddress,
           media: String(mediaUrl),
@@ -173,65 +168,10 @@ const CreateBulkMintHome: React.FC = () => {
                 </DutchC.CreateBulkMintContentCSVUploadWrapper>
               </DutchC.CreateBulkMintContentMainLeft>
               {/* right */}
-              <DutchC.CreateBulkMintContentMainRight>
-                <DutchC.CreateBulkMintContentNFTPreviewLabel>
-                  NFT Preview <br />
-                  The previews are shown according to the files you upload.
-                </DutchC.CreateBulkMintContentNFTPreviewLabel>
-                <DutchC.CreateBulkMintContentNFTPreviewWrapper>
-                  <DutchC.CreateBulkMintContentNFTPreviewInner>
-                    {/* preview table */}
-                    <Table>
-                      <THead>
-                        <TR>
-                          <TD>Media</TD>
-                          <TD>Name</TD>
-                          <TD>Unit</TD>
-                          <TD>Royalty</TD>
-                          <TD>Description</TD>
-                          <TD>Properties</TD>
-                        </TR>
-                      </THead>
-                      <TBody>
-                        {selectedCSVFileContent.length === imageUrls.length &&
-                          selectedCSVFileContent.map(
-                            (csvFileContent, index) => {
-                              return (
-                                <TR key={index}>
-                                  <TD className="flex items-center space-x-2 text-sm text-black font-medium dark:text-white">
-                                    <Image
-                                      src={imageUrls[index]}
-                                      alt=""
-                                      width={40}
-                                      height={40}
-                                      className="border border-black/10 rounded dark:border-white/10"
-                                    />
-                                    <span>{csvFileContent.name}</span>
-                                  </TD>
-                                  <TD className="text-sm text-black dark:text-white whitespace-nowrap">
-                                    {csvFileContent.name}
-                                  </TD>
-                                  <TD className="text-sm text-black dark:text-white">
-                                    {csvFileContent.amount}
-                                  </TD>
-                                  <TD className="text-sm text-black dark:text-white">
-                                    {csvFileContent.royalties}
-                                  </TD>
-                                  <TD className="text-sm text-black dark:text-white max-w-[190px] truncate">
-                                    {csvFileContent.description}
-                                  </TD>
-                                  <TD className="text-sm text-black dark:text-white max-w-[190px] truncate">
-                                    {csvFileContent.properties}
-                                  </TD>
-                                </TR>
-                              );
-                            }
-                          )}
-                      </TBody>
-                    </Table>
-                  </DutchC.CreateBulkMintContentNFTPreviewInner>
-                </DutchC.CreateBulkMintContentNFTPreviewWrapper>
-              </DutchC.CreateBulkMintContentMainRight>
+              <PreviewTable
+                selectedCSVFileContent={selectedCSVFileContent}
+                imageUrls={imageUrls}
+              />
             </DutchC.CreateBulkMintContentMain>
 
             {/* Actions */}

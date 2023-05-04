@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { toast } from 'react-toastify';
 
@@ -18,11 +18,14 @@ import * as DutchC from './styles';
 import * as Icons from '@/common/Icons';
 import useNFTHook from '@/hooks/useNFTHook';
 import { useForm } from '@/hooks/useForm';
-import { pinFileToIPFS } from '@/lib/pinata';
+import { getIpfsHttpUrl, pinFileToIPFS } from '@/lib/pinata';
 import CollectionDropdown from '@/common/Dropdown/CollectionDropdown';
 import { useRouter } from 'next/router';
 import { Input } from '@/common/Input/styles';
 import { ContentLayout } from '@/components/layout';
+import { useAppDispatch } from '@/redux/store';
+import { setDraftNFTs } from '../ducks';
+
 
 // types
 type NFTPropertyT = {
@@ -36,13 +39,21 @@ interface NFTPropertyI {
   onRemove?: () => void;
 }
 
+
+const initialValues = {
+  name: '',
+  amount: '',
+  royalty: '',
+  description: '',
+};
+
 const CreateDraftNFTHome: React.FC = () => {
-  const { theme } = useTheme();
-  const { push } = useRouter();
+  const dispatch = useAppDispatch();
 
-  const { createDraftNFT } = useNFTHook();
+  const { push, query } = useRouter();
+  const { upsertDraftNFT, getDraftNftById, getCollectionDraftNFT } =
+    useNFTHook();
 
-  const [open, setOpen] = useState(true);
   const [counter, setCounter] = useState(1);
   const [media, setMedia] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -56,16 +67,43 @@ const CreateDraftNFTHome: React.FC = () => {
     },
   ]);
 
-  const [values, handleChange] = useForm({
-    name: '',
-    amount: '',
-    royalty: '',
-    description: '',
-  });
+  const [values, handleChange] = useState(initialValues);
 
-  const toggleGuide = () => {
-    setOpen((open) => !open);
-  };
+  useEffect(() => {
+    const setEditNft = async () => {
+      const id = query?.edit;
+      if (id) {
+        const nft = await getDraftNftById(String(id));
+        console.log(nft);
+
+        if (nft) {
+          const properties = JSON.parse(nft.properties);
+
+          if (Object.keys(properties).length > 0) {
+            const keys = Object.keys(properties);
+            const values = Object.values(properties);
+            const newProp: NFTPropertyT[] = keys.map((key, index) => ({
+              type: key,
+              value: values[index] as unknown as string,
+            }));
+            setProperties(newProp);
+            setCounter(keys.length);
+          }
+          setMedia(getIpfsHttpUrl(nft.media));
+          handleChange({
+            name: nft.name,
+            amount: nft.amount,
+            royalty: nft.royalty,
+            description: nft.description,
+          });
+        }
+      } else {
+        handleChange(initialValues);
+        setMedia('');
+      }
+    };
+    setEditNft();
+  }, [query]);
 
   const handleAddProperty = useCallback(() => {
     setProperties((properties) => [
@@ -92,29 +130,60 @@ const CreateDraftNFTHome: React.FC = () => {
   );
 
   const handleCreateDraftNFT = async () => {
-    setIsLoading(true);
-    const mediaUrl = await pinFileToIPFS([media]);
+    if (media === '') return toast.error('Media image is required');
+    if (values.name === '') return toast.error('Collection name is required');
+    if (values.amount === '')
+      return toast.error('Collection amount is required');
 
     const parsedProperties: Record<string, string> = {};
 
+    let numOfProperties = 0;
+
     properties.forEach((property: any) => {
       parsedProperties[property.type] = property.value;
+      numOfProperties++;
     });
 
-    if (mediaUrl) {
-      await createDraftNFT({
-        properties: JSON.stringify(parsedProperties),
-        collection: selectedCollectionAddress,
-        media: String(mediaUrl),
-        name: values.name,
-        royalty: values.royalty,
-        amount: values.amount,
-        description: values.description,
-      });
-      toast('Draft saved successfully', { type: 'success' });
-      push('/create');
-    } else toast('Unable to pin media', { type: 'error' });
+    if (numOfProperties > 64)
+      return toast.error('Maximum properties should be 64');
 
+    setIsLoading(true);
+
+    const params = {
+      properties: JSON.stringify(parsedProperties),
+      collection: selectedCollectionAddress,
+      name: values.name,
+      royalty: values.royalty,
+      amount: values.amount,
+      description: values.description,
+    };
+
+    let mediaUrl = media;
+
+    if (media.length !== 46) {
+      const mediaIpfsUrl = await pinFileToIPFS([media]);
+      if (!mediaIpfsUrl) return toast.error('Unable to pin media');
+      mediaUrl = String(mediaIpfsUrl);
+    }
+
+    const id = query && query.edit ? String(query.edit) : null;
+
+    const res = await upsertDraftNFT(
+      {
+        ...params,
+        media: String(mediaUrl),
+      },
+      id
+    );
+    if (res) {
+      const nft = await getCollectionDraftNFT(selectedCollectionAddress);
+      if (nft) {
+        dispatch(setDraftNFTs(nft));
+      }
+      toast.success('successfully');
+
+      push('/create');
+    } else toast.error('Error occurred');
     setIsLoading(false);
   };
 
@@ -158,7 +227,12 @@ const CreateDraftNFTHome: React.FC = () => {
             {/* Name */}
             <TextInput
               label="Name"
-              onChange={handleChange}
+              onChange={(e) =>
+                handleChange((prevState) => ({
+                  ...prevState,
+                  name: e.target.value,
+                }))
+              }
               value={values.name}
               name="name"
             />
@@ -169,7 +243,12 @@ const CreateDraftNFTHome: React.FC = () => {
               helper="Max: 100,000"
               min={1}
               max={100000}
-              onChange={handleChange}
+              onChange={(e) =>
+                handleChange((prevState) => ({
+                  ...prevState,
+                  amount: e.target.value,
+                }))
+              }
               value={values.amount}
               name="amount"
             />
@@ -180,7 +259,12 @@ const CreateDraftNFTHome: React.FC = () => {
               helper="Max: 10"
               min={1}
               max={10}
-              onChange={handleChange}
+              onChange={(e) =>
+                handleChange((prevState) => ({
+                  ...prevState,
+                  royalty: e.target.value,
+                }))
+              }
               value={values.royalty}
               name="royalty"
             />
@@ -222,7 +306,12 @@ const CreateDraftNFTHome: React.FC = () => {
           <TextArea
             label="Description"
             placeholder="Describe your NFT"
-            onChange={handleChange}
+            onChange={(e) =>
+              handleChange((prevState) => ({
+                ...prevState,
+                description: e.target.value,
+              }))
+            }
             value={values.description}
             name="description"
           />

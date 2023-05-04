@@ -87,6 +87,7 @@ export interface NFTI {
   nftType: string;
   tokenAddress: string;
   slots: SlotI[];
+  isSynced?: boolean;
   metadata: NftDataI;
 }
 
@@ -146,7 +147,7 @@ export interface MintingNftsI {
   status: MintStatusEnum;
 }
 
-export type TabTypeT = 'ALL' | 'LIST' | 'COLLECTION' | 'ARCHIVE';
+export type TabTypeT = 'ALL' | 'LIST' | 'COLLECTION' | 'ARCHIVE' | 'BANK0X';
 
 export interface UserListI {
   listName: string;

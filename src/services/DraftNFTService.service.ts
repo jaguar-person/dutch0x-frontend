@@ -10,6 +10,10 @@ export default class DraftNFTService extends Service<any> {
     return this.postRequest(``, { ...draftNFTI });
   }
 
+  public updateDraftNFT(draftNFTI: DraftNFTI, id: string) {
+    return this.postRequest(`update-nft/${id}`, { ...draftNFTI });
+  }
+
   public deleteDraftNFT(reqData: DeleteDraftNFTRequestI) {
     return this.postRequest(`deleteDraftNft`, { ...reqData });
   }
@@ -19,6 +23,10 @@ export default class DraftNFTService extends Service<any> {
     ownerAddress: string
   ) {
     return this.getRequest(`draftNft/${ownerAddress}/${collectionAddress}`);
+  }
+
+  public getDraftNftById(id: string) {
+    return this.getRequest(`draftNft/${id}`);
   }
 
   public getAllDraftNFT(accessToken: string) {
