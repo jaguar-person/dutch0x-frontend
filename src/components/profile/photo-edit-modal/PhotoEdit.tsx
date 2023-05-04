@@ -74,6 +74,21 @@ const nfts = [
   },
 ];
 
+const sortList = [
+  {
+    name: 'Today',
+    value: 'today',
+  },
+  {
+    name: '1 Week',
+    value: 'oneWeek',
+  },
+  {
+    name: '2 Weeks',
+    value: 'twoWeeks',
+  },
+];
+
 interface PhotoEditProps {
   isPhotoEdit: boolean;
   onPhotoEdit: () => void;
@@ -120,7 +135,7 @@ export const FromNFTs = () => {
     <DutchC.FromNFTsWrapper>
       <DutchC.FromNFTsNavbar>
         <SearchInput className="flex-grow" />
-        <SortSelect />
+        <SortSelect title="Sort By" options={sortList} />
         <Pagination
           onChange={() => {
             setPage(true);

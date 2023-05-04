@@ -255,7 +255,7 @@ const NFTTracking = () => {
       <DutchC.ContentSwitch>
         <DutchC.ContentSwitchInner>
           <DutchC.TransactionSwitchWrapper>
-            <div className="bg-black/5 dark:bg-white/5">
+            <div className="bg-black/5 dark:bg-white/5 flex gap-1 items-center">
               {transOptions.map((option, i) => (
                 <OptionSwitch
                   key={i}
@@ -269,7 +269,7 @@ const NFTTracking = () => {
             </div>
           </DutchC.TransactionSwitchWrapper>
           <DutchC.DaySwitchWrapper>
-            <div className="pr-1 flex">
+            <div className="pr-1 flex gap-1">
               {dayOptions.map((option, i) => (
                 <OptionSwitch
                   key={i}
