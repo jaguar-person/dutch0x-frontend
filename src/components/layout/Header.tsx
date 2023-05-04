@@ -20,6 +20,9 @@ import Image from 'next/image';
 
 import * as DutchC from './styles';
 import AvatarIcon from '@/assets/avatar.png';
+import LoopringApi from '@/services/LoopringApi.service';
+import useWalletHook from '@/hooks/useWalletHook';
+import { shortenAddress } from '@/helpers';
 
 const menus: Menu[] = [
   {
@@ -82,16 +85,57 @@ const Header: React.FC = () => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isRegister, setRegister] = useState(false);
+  const [profileData, setProfileData] = useState(ProfileMockData);
+  const [status, setStatus] = useState<'ACTIVE' | 'INACTIVE' | 'LOADING'>(
+    'LOADING'
+  );
 
   const { isConnected } = useAppSelector((state) => state.webAppReducer);
 
   const dispatch = useAppDispatch();
+
+  const { disconnectAccount, getUserWalletInfo } = useWalletHook();
 
   const PAGE_PATH = router.asPath.split('/')[1] ?? '';
 
   const toggleTheme = useCallback(() => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   }, [setTheme, theme]);
+
+  const [averageFee, setAverageFee] = useState();
+
+  const openConnectionModal = () => {
+    dispatch(setIsConnectionModalOpen(true));
+  };
+
+  const fetchStatus = async () => {
+    const res = await new LoopringApi().getStatusCheck();
+    if (res.data.message === 'success') return setStatus('ACTIVE');
+    return setStatus('INACTIVE');
+  };
+
+  const fetchWalletInfo = async () => {
+    const userWalletInfo = await getUserWalletInfo();
+
+    let newProfileInfo = { ...profileData };
+    setProfileData({
+      ...newProfileInfo,
+      ethL1: userWalletInfo?.layer1EthBalance,
+      ethL2: userWalletInfo?.layer2EthBalance,
+      walletAddress: shortenAddress(userWalletInfo?.userAddress || ''),
+      walletBalance: {
+        eth:
+          parseFloat(userWalletInfo?.layer1EthBalance as string) +
+          parseFloat(userWalletInfo?.layer2EthBalance as string),
+        dollar: 0,
+      },
+    });
+  };
+
+  useEffect(() => {
+    fetchStatus();
+    fetchWalletInfo();
+  }, [dispatch]);
 
   useEffect(() => {
     setMounted(true);
@@ -139,27 +183,29 @@ const Header: React.FC = () => {
         </DutchC.SearchWrapper>
 
         <DutchC.RightActions>
-          <Badge variant="dot" label="STATUS" />
-          {/* 
+          <Badge status={status} />
+
           <IconButton
             icon={theme === 'light' ? 'moon' : 'sun'}
             onClick={toggleTheme}
-          /> */}
+          />
 
-          {(isConnected && <GasInfo {...GasInfoMockData} />) || (
+          {(isConnected && (
+            <GasInfo setAverageFee={setAverageFee} {...GasInfoMockData} />
+          )) || (
             <DutchC.HeaderGasWrapper>
               <Icons.ICustomGas
                 currentColor={theme === 'light' ? 'black' : 'white'}
               />
               <div className={theme === 'light' ? 'text-black' : 'text-white'}>
-                $0.14 USD
+                $ {averageFee} USD
               </div>
             </DutchC.HeaderGasWrapper>
           )}
 
           <IconButton icon="bell" />
 
-          <ProfileMenu {...ProfileMockData} />
+          <ProfileMenu {...profileData} />
         </DutchC.RightActions>
       </DutchC.HeaderInner>
       <ConnectWallet />

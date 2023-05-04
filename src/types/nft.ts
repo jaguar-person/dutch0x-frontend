@@ -161,3 +161,28 @@ export enum UsageStatusEnum {
   ARCHIVED = 'ARCHIVED',
   UNARCHIVED = 'UNARCHIVED',
 }
+
+export type NFTFee = {
+  fees: {
+    eth: {
+      feeMint: string;
+      feeTransfer: string;
+      feeWithdrawal: string;
+    };
+    lrc: {
+      feeMint: string;
+      feeTransfer: string;
+      feeWithdrawal: string;
+    };
+    usdt: {
+      feeMint: string;
+      feeTransfer: string;
+      feeWithdrawal: string;
+    };
+    usdc: {
+      feeMint: string;
+      feeTransfer: string;
+      feeWithdrawal: string;
+    };
+  };
+};

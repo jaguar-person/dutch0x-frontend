@@ -7,6 +7,9 @@ import ExchangeIcon from '../../assets/exchange.svg';
 import FriendsIcon from '../../assets/friends.svg';
 import GasIcon from '../../assets/gas.svg';
 import DiamondBlueIcon from '../../assets/diamond-blue.svg';
+import USDTIcon from '../../assets/usdt-icon.svg';
+import LRCIcon from '../../assets/lrc-icon.svg';
+import USDCIcon from '../../assets/usdc-icon.svg';
 import DiamondIcon from '../../assets/diamond.svg';
 import TriangleX2 from '../../assets/triangleX2.svg';
 import Fire from '../../assets/fire.svg';
@@ -764,6 +767,27 @@ export const ICustomDiamondBlue: React.FC<{
   currentColor?: string;
 }> = ({ className = ' ', currentColor }) => {
   return <DiamondBlueIcon className={className} currentColor={currentColor} />;
+};
+
+export const ICustomUSDTIcon: React.FC<{
+  className?: string;
+  currentColor?: string;
+}> = ({ className = ' ', currentColor }) => {
+  return <USDTIcon className={className} currentColor={currentColor} />;
+};
+
+export const ICustomUSDCIcon: React.FC<{
+  className?: string;
+  currentColor?: string;
+}> = ({ className = ' ', currentColor }) => {
+  return <USDCIcon className={className} currentColor={currentColor} />;
+};
+
+export const ICustomLRCIcon: React.FC<{
+  className?: string;
+  currentColor?: string;
+}> = ({ className = ' ', currentColor }) => {
+  return <LRCIcon className={className} currentColor={currentColor} />;
 };
 
 export const ICustomDiamond: React.FC<{
