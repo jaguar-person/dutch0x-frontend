@@ -185,10 +185,7 @@ const NFTTracking = () => {
           primarySales,
           secondaryTrade,
           allTransactions,
-        } = getTradeNftsUtils(
-          data.tradeNFTs,
-          String(account)
-        );
+        } = getTradeNftsUtils(data.tradeNFTs, String(account));
 
         setLrcTotalRoyalty(totalRoyatliesLRC);
         setEthTotalRoyalty(totalRoyatliesETH);

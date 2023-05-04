@@ -26,7 +26,6 @@ import { ContentLayout } from '@/components/layout';
 import { useAppDispatch } from '@/redux/store';
 import { setDraftNFTs } from '../ducks';
 
-
 // types
 type NFTPropertyT = {
   type: string;
@@ -38,7 +37,6 @@ interface NFTPropertyI {
   value: string;
   onRemove?: () => void;
 }
-
 
 const initialValues = {
   name: '',

@@ -80,7 +80,7 @@ const Minting: React.FC<MintModalPropsI> = ({
     );
 
     if (!accountDetails) return toast.error('Signing failed');
-    
+
     for (let i = 0; i < selectedDraftNFTs.length; i++) {
       const selectedDraftNft = selectedDraftNFTs[i];
       try {

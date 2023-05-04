@@ -95,7 +95,7 @@ const AnalyticsSideBar: React.FC<AnalyticsSideBarProps> = ({
           }
         }
         dispatch(setTrackList(list));
-      } catch (error) { }
+      } catch (error) {}
     })();
   }, [trackBy]);
 
@@ -132,8 +132,9 @@ const AnalyticsSideBar: React.FC<AnalyticsSideBarProps> = ({
         <DutchC.SideBarHeader>
           <DutchC.SideBarHeaderText>Analytics</DutchC.SideBarHeaderText>
           <Select
-            className={`border-none w-full flex-grow ${isConnected ? 'visible' : 'invisible'
-              }`}
+            className={`border-none w-full flex-grow ${
+              isConnected ? 'visible' : 'invisible'
+            }`}
             options={[
               { key: '0', value: 'NFT Tracking' },
               { key: '1', value: 'Wallet Tracking' },
@@ -143,7 +144,10 @@ const AnalyticsSideBar: React.FC<AnalyticsSideBarProps> = ({
         </DutchC.SideBarHeader>
         <DutchC.SideBarBody>
           <DutchC.CurrencySelect>
-            <Accordion label='' className={isConnected ? 'visible' : 'invisible'}>
+            <Accordion
+              label=""
+              className={isConnected ? 'visible' : 'invisible'}
+            >
               <DutchC.AccordionContent>
                 <p>Crypto:</p>
                 <p className="font-medium">ETH</p>
@@ -151,7 +155,10 @@ const AnalyticsSideBar: React.FC<AnalyticsSideBarProps> = ({
             </Accordion>
           </DutchC.CurrencySelect>
           <DutchC.CurrencySelect>
-            <Accordion label='' className={isConnected ? 'visible' : 'invisible'}>
+            <Accordion
+              label=""
+              className={isConnected ? 'visible' : 'invisible'}
+            >
               <DutchC.AccordionContent>
                 <p>Fiat:</p>
                 <p className="font-medium">USD</p>

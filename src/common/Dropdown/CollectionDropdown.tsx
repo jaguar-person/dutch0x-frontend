@@ -16,7 +16,6 @@ interface CollectionDropdownI {
   setSelectedCollectionAddress: React.Dispatch<React.SetStateAction<string>>;
 }
 
-
 const CollectionDropdown: React.FC<CollectionDropdownI> = ({
   selectedCollectionAddress,
   setSelectedCollectionAddress,
