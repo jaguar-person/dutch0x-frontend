@@ -76,10 +76,14 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
         );
       }
 
-      if (!type.toLowerCase().match(/image\/(jpg|jpeg|png|gif)$/)) {
-        toast('Selected file image must be jpg, jpeg, png or gif image only', {
-          type: 'error',
-        });
+      if (
+        !type
+          .toLowerCase()
+          .match(/image\/(jpg|jpeg|png|gif|webp|webm|mp4|glb|gltf)$/)
+      ) {
+        toast.error(
+          'Selected file must be jpg, jpeg, png, gif, webp, webm, mp4, glb or gltf only'
+        );
         return;
       }
       const x = await toBase64(e.target.files[0]);

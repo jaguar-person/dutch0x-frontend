@@ -176,7 +176,7 @@ const DraftNFT: React.FC<DraftNFTProps> = ({
     if (isDeleted) {
       toast('Draft deleted successfully', { type: 'error' });
     } else {
-      toast('Error occured saving nft', { type: 'error' });
+      toast('Error occured deleting nft', { type: 'error' });
     }
 
     const nft = await getCollectionDraftNFT(collection);

@@ -7,6 +7,7 @@ import { shallowEqual } from 'react-redux';
 import { DraftNFTI, MintingNftsI, MintStatusEnum, NftDataI } from '@/types';
 import { LoopringService } from '@/lib/LoopringService';
 import {
+  CreatePageReducerI,
   setMintingNfts,
   setMintModalActiveStep,
   updateMintNftStatus,
@@ -14,6 +15,10 @@ import {
 import useNFTHook from '@/hooks/useNFTHook';
 import { sleep } from '@loopring-web/loopring-sdk';
 import { handleNFTPropertiesAttributes } from '@/lib/metadata';
+import { WebAppReducerI } from '@/ducks';
+import useWalletHook from '@/hooks/useWalletHook';
+import { toast } from 'react-toastify';
+import assert from 'assert';
 
 interface MintModalPropsI {
   isDepositFund: boolean;
@@ -28,7 +33,8 @@ const Minting: React.FC<MintModalPropsI> = ({
 
   const { activeStep, selectedDraftNFTs, isMintModalIsOpen, mintingNfts } =
     useAppSelector((state) => {
-      const { mintModal, selectedDraftNFTs } = state.createPageReducer;
+      const { mintModal, selectedDraftNFTs } =
+        state.createPageReducer as CreatePageReducerI;
       return {
         activeStep: mintModal.activeStep,
         selectedDraftNFTs,
@@ -37,10 +43,12 @@ const Minting: React.FC<MintModalPropsI> = ({
       };
     }, shallowEqual);
 
-  const { walletType, accountInfo } = useAppSelector((state) => {
-    const { walletType, accountInfo } = state.webAppReducer;
-    return { walletType, accountInfo };
+  const { walletType, account } = useAppSelector((state) => {
+    const { walletType, account } = state.webAppReducer as WebAppReducerI;
+    return { walletType, account };
   }, shallowEqual);
+
+  const { connectAccount } = useWalletHook();
 
   const { deleteDraftNFT } = useNFTHook();
 
@@ -48,23 +56,31 @@ const Minting: React.FC<MintModalPropsI> = ({
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const nfts: MintingNftsI[] = selectedDraftNFTs.map(
-      (draftNFT: DraftNFTI, index: number) => ({
-        id: index,
-        media: draftNFT.media,
-        name: draftNFT.name,
-        status: MintStatusEnum.QUEUED,
-      })
-    );
+    const nfts: MintingNftsI[] = selectedDraftNFTs.map((draftNFT, index) => ({
+      id: index,
+      media: draftNFT.media,
+      name: draftNFT.name,
+      status: MintStatusEnum.QUEUED,
+    }));
     dispatch(setMintingNfts(nfts));
   }, [selectedDraftNFTs.length, isMintModalIsOpen]);
 
   useEffect(() => {}, [mintingNfts]);
 
   const handleStartMint = async () => {
-    if (!accountInfo) return;
+    assert(account, 'account === null');
 
     dispatch(setMintModalActiveStep(1));
+
+    await connectAccount(walletType, true);
+
+    const accountDetails = await loopringService.unlockAccount(
+      account,
+      walletType
+    );
+
+    if (!accountDetails) return toast.error('Signing failed');
+
     for (let i = 0; i < selectedDraftNFTs.length; i++) {
       const selectedDraftNft = selectedDraftNFTs[i];
       try {
@@ -85,7 +101,7 @@ const Minting: React.FC<MintModalPropsI> = ({
         };
 
         const res = await loopringService.mintNFT({
-          accountInfo,
+          accountInfo: accountDetails,
           walletType,
           metadata: nftData,
           amount: selectedDraftNft.amount,

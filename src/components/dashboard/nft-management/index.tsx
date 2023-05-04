@@ -118,6 +118,21 @@ const wideFilters: WIDEFILTERTYPE[][] = [
   ],
 ];
 
+const sortList = [
+  {
+    name: 'Today',
+    value: 'today',
+  },
+  {
+    name: '1 Week',
+    value: 'oneWeek',
+  },
+  {
+    name: '2 Weeks',
+    value: 'twoWeeks',
+  },
+];
+
 const NFTManagement: React.FC = () => {
   const { theme } = useTheme();
   const [open, setOpen] = useState(false);
@@ -205,7 +220,7 @@ const NFTManagement: React.FC = () => {
                   </div>
                 )}
                 <SearchInput placeholder="NFT name or id" />
-                <SortSelect />
+                <SortSelect title="Sort By" options={sortList} />
                 {(currentWideFilter === 'ALL' ||
                   currentWideFilter === 'LIST') && (
                   <Switch

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-
 import DepositModalHeader from './DepositModalHeader';
 import { ModalBody, Modal, IconButton } from '@/common';
 
@@ -34,6 +33,7 @@ export const DepositInProcessModal: React.FC<DepositInProcessModalProps> = ({
               for (let i = 0; i < 4; i++) {
                 gridItems.push(
                   <div
+                    key={i}
                     className={clsx(
                       'w-full h-full bg-black/30',
                       {

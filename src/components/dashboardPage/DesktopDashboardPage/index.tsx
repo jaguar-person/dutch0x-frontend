@@ -6,6 +6,7 @@ import { setIsConnectionModalOpen } from '@/ducks';
 
 import { AppLayout } from '@/components/layout';
 import Navbar from './Navbar';
+import ActivityReportModal from '@/components/dashboard/ActivityReportModal';
 
 const DesktopDashboardPage = () => {
   const { isConnected } = useAppSelector((state) => state.webAppReducer);
@@ -18,6 +19,7 @@ const DesktopDashboardPage = () => {
 
   return (
     <AppLayout>
+      <ActivityReportModal />
       {isConnected ? (
         <Navbar />
       ) : (

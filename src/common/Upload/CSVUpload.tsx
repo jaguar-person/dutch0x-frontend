@@ -31,18 +31,17 @@ const CSVUpload: React.FC<CSVUploadProps> = ({
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files)
-      return toast('file upload failed', { type: 'error' });
+    if (!event.target.files) return toast.error('file upload failed');
 
     const handleParseComplete = (result: any) => {
       const data = result.data;
-      data.pop();
       setSelectedCSVFileContent(data);
     };
 
     Papa.parse(event.target.files[0], {
       complete: handleParseComplete,
       header: true,
+      skipEmptyLines: true,
     });
     setSelectedCSV(event.target.files[0]);
   };
