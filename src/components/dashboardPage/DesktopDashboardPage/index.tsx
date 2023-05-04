@@ -19,7 +19,6 @@ const DesktopDashboardPage = () => {
 
   return (
     <AppLayout>
-      <ActivityReportModal />
       {isConnected ? (
         <Navbar />
       ) : (
