@@ -9,6 +9,9 @@ import webAppReducer from '@/ducks';
 import createPageReducer from '@/components/create/ducks';
 import dashboardPageReducer from '@/components/dashboard/ducks';
 import { HYDRATE, createWrapper } from 'next-redux-wrapper';
+import statusCheckDucks, {
+  statusCheckReducer,
+} from '@/ducks/status-check.ducks';
 
 const webAppPersistConfig = {
   key: 'webAppReducer',
@@ -25,7 +28,13 @@ const createPagePersistConfig = {
 const dashboardPagePersistConfig = {
   key: 'dashboardPageReducer',
   storage: storage,
-  blacklist: ['selectedNFTs', 'collectionNfts', 'trackList', 'managementNFTs'],
+  blacklist: [
+    'selectedNFTs',
+    'collectionNfts',
+    'trackList',
+    'managementNFTs',
+    'statusCheck',
+  ],
 };
 
 const rootReducer = combineReducers({

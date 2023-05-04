@@ -20,7 +20,10 @@ export default class Service<T> {
     accessToken?: string
   ): Promise<any> {
     try {
-      const headers = createHeaders('application/json', accessToken);
+      const headers = {
+        ...createHeaders('application/json', accessToken),
+        Authorisation: accessToken,
+      };
       return await axios.get(`${this.HOST}${this.BASE_URL}/${url}`, {
         headers,
       });
@@ -39,7 +42,22 @@ export default class Service<T> {
       return await axios.post(`${this.HOST}${this.BASE_URL}/${url}`, data, {
         headers,
       });
-    } catch (error: any) {
+    } catch (error) {
+      return error as AxiosError;
+    }
+  }
+
+  protected async putRequest(
+    url: string,
+    data: any,
+    accessToken?: string
+  ): Promise<any> {
+    try {
+      const headers = createHeaders('application/json', accessToken);
+      return await axios.put(`${this.HOST}${this.BASE_URL}/${url}`, data, {
+        headers,
+      });
+    } catch (error) {
       return error as AxiosError;
     }
   }

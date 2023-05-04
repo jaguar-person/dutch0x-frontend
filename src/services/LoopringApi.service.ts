@@ -12,10 +12,17 @@ export default class LoopringApi extends Service<any> {
   public getUserWalletInfo(ownerAddress: string, apiKey: string) {
     return this.getRequest(`user-wallet/${ownerAddress}`, apiKey);
   }
+  public getNftFees(ownerAddress: string, apiKey: string) {
+    return this.getRequest(`nft-fee/${ownerAddress}`, apiKey);
+  }
 
   public getUserCollectionNFTs(ownerAddress: string, tokenAddress: string) {
     return this.getRequest(
       `user-collection-nft/${ownerAddress}/${tokenAddress}`
     );
+  }
+
+  public getStatusCheck() {
+    return this.getRequest('api-status');
   }
 }

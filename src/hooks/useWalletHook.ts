@@ -82,7 +82,26 @@ const useWalletHook = () => {
     }
   };
 
-  return { connectAccount, disconnectAccount, getUserWalletInfo };
+  const getUserNFTFee = async () => {
+    assert(account, 'account === null');
+    assert(apiKey, 'apiKey === null');
+    try {
+      const { response, data } = await loopringApi.getNftFees(account, apiKey);
+      if (data && data.data) {
+        return data.data;
+      }
+      return null;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return {
+    connectAccount,
+    disconnectAccount,
+    getUserWalletInfo,
+    getUserNFTFee,
+  };
 };
 
 export default useWalletHook;
