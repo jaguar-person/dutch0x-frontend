@@ -1,4 +1,5 @@
 import * as DutchC from './styles';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 import {
   ShortcutContextMenu,
@@ -21,6 +22,9 @@ const NFTMultiCard: React.FC<MultiCardProps> = ({
   className,
   onShowListModal,
 }) => {
+  console.log({ imageUrls });
+  const router = useRouter();
+
   return (
     <DutchC.MultiUploadWrapper onClick={onShowListModal}>
       <DutchC.MultiUploadInner className={className}>
@@ -70,19 +74,20 @@ const NFTMultiCard: React.FC<MultiCardProps> = ({
             <ShortcutContextMenuItem
               text="Find Holders"
               onClick={() => {
-                console.log('234567890');
+                router.push('/dashboard/holders');
               }}
             />
             <ShortcutContextMenuItem
               text="Show Sales"
               onClick={() => {
-                console.log('234567890');
+                router.push('/dashboard/analytics');
               }}
             />
             <ShortcutContextMenuItem
               text="Move to Achieves"
               onClick={() => {
-                console.log('234567890');
+                // control
+                router.push('/dashboard/nft-management/archive');
               }}
             />
           </ShortcutContextMenu>

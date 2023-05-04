@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
+import { useRouter } from 'next/router';
 
 import * as Icons from '@/common/Icons';
 import CopyNFTId from '../../copy-nft-id';
@@ -8,10 +9,11 @@ import {
   ShortcutContextMenu,
   ShortcutContextMenuItem,
 } from '../../../shared/shortcut-context-menu';
-import { CreateNftManagementI, NFTI } from '@/types';
+import { CreateNftManagementI } from '@/types';
 import * as DutchC from './styles';
 import { useAppSelector } from '@/redux/store';
 import { shallowEqual } from 'react-redux';
+import { DashboardPageReducerI } from '@/components/dashboard/ducks';
 import { getIpfsHttpUrl } from '@/lib/pinata';
 
 import SkeletonLoader from '@/common/Loader/SkeletonLoader';
@@ -30,98 +32,120 @@ const NFTCard: React.FC<NFTCardProps> = ({
   image,
   name,
   amount,
+  available,
   description,
   onSelect,
 }) => {
   const { theme } = useTheme();
-
-  const [isSelected, setIsSelected] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const { selectedNFTs } = useAppSelector((state) => {
-    const { selectedNFTs } = state.dashboardPageReducer;
+    const { selectedNFTs } =
+      state.dashboardPageReducer as DashboardPageReducerI;
     return { selectedNFTs };
   }, shallowEqual);
 
-  // const isSelected = (nftId: string) => {
-  //   return (
-  //     selectedNFTs.filter((selectedNFT: NFTI) => selectedNFT.nftId === nftId)
-  //       .length > 0
-  //   );
-  // };
-
-  const handleCheck = () => {
-    onSelect();
-    setIsSelected(!isSelected);
+  const isSelected = (nftId: string) => {
+    return (
+      selectedNFTs.filter((selectedNFT) => selectedNFT.nftID === nftId).length >
+      0
+    );
   };
 
+  const ShortcutContextMenuItems = [
+    ['Find Holders', 'Show Sales', 'Move to Archives'],
+    ['Recover', 'Remove from DUTCH0x'],
+  ];
+
   return (
-    <DutchC.NFTCard selected={isSelected} onClick={handleCheck} theme={theme}>
-      <SkeletonLoader count={1} width={230} height={230} loading={loading}>
-        <div className="relative w-full h-full">
-          <DutchC.NFTUnitBadge theme={theme}>
-            <Icons.IEye
-              color={theme === 'light' ? 'black' : 'white'}
-              size="large"
-            ></Icons.IEye>
-            {`${0}/${1000}`}
-          </DutchC.NFTUnitBadge>
-          <div className="absolute top-4 left-4 flex items-center justify-center w-5 h-5 rounded-full">
-            {isSelected ? (
-              <Icons.ICheckCircle
-                color={theme === 'light' ? 'black' : 'white'}
-                size="large"
-              />
-            ) : (
-              <DutchC.NFTSelectedMark />
-            )}
-          </div>
-
-          <Image
-            src="/images/rice.webp"
-            alt={image}
-            width={230}
-            height={230}
-            className="aspect-square"
-            style={{
-              width: '100%',
-              height: '100%',
-            }}
+    <DutchC.NFTCard
+      selected={isSelected(nftId)}
+      onClick={onSelect}
+      theme={theme}
+    >
+      <DutchC.NFTUnitBadge theme={theme}>
+        <Icons.IEye
+          color={theme === 'light' ? 'black' : 'white'}
+          size="large"
+        ></Icons.IEye>
+        {`${available}/${amount}`}
+      </DutchC.NFTUnitBadge>
+      <div className="absolute top-4 left-4 flex items-center justify-center w-5 h-5 rounded-full">
+        {isSelected(nftId) ? (
+          <Icons.ICheckCircle
+            color={theme === 'light' ? 'black' : 'white'}
+            size="large"
           />
-        </div>
-      </SkeletonLoader>
+        ) : (
+          <DutchC.NFTSelectedMark />
+        )}
+      </div>
 
-      <SkeletonLoader count={2} width={230} height={20} loading={loading}>
-        <DutchC.NFTFooter>
-          <DutchC.NFTDetail>
-            <DutchC.NFTTitleWrapper>
-              <DutchC.NFTTitle>{name}</DutchC.NFTTitle>
-            </DutchC.NFTTitleWrapper>
-            <DutchC.NFTDescription>{description}</DutchC.NFTDescription>
-            <CopyNFTId id={nftId} type="short" />
-          </DutchC.NFTDetail>
-          {type !== 'collections' && (
-            <ShortcutContextMenu position="TR">
-              {
-                <>
+      {image && (
+        <Image
+          src={getIpfsHttpUrl(image)}
+          alt={image}
+          width={230}
+          height={230}
+          className="aspect-square"
+        />
+      )}
+      <DutchC.NFTFooter>
+        <DutchC.NFTDetail>
+          <DutchC.NFTTitleWrapper>
+            <DutchC.NFTTitle>{name}</DutchC.NFTTitle>
+            {type === 'bank0x' && (
+              <Icons.ICheckBadge variant="solid" color="orange" size="medium" />
+            )}
+          </DutchC.NFTTitleWrapper>
+          <DutchC.NFTDescription>{description}</DutchC.NFTDescription>
+          <CopyNFTId id={nftId} type="short" />
+        </DutchC.NFTDetail>
+        {type !== 'collections' && (
+          <ShortcutContextMenu position="TR">
+            {(type === 'bank0x' && (
+              <>
+                <ShortcutContextMenu position="BR">
                   <ShortcutContextMenuItem
-                    text="Recover"
+                    text="Find Holders"
                     onClick={() => {
-                      console.log('234567890');
+                      router.push('/dashboard/holders');
                     }}
                   />
                   <ShortcutContextMenuItem
-                    text="Remove from DUTCH0x"
+                    text="Show Sales"
                     onClick={() => {
-                      console.log('234567890');
+                      router.push('/dashboard/analytics');
                     }}
                   />
-                </>
-              }
-            </ShortcutContextMenu>
-          )}
-        </DutchC.NFTFooter>
-      </SkeletonLoader>
+                  <ShortcutContextMenuItem
+                    text="Move to Achieves"
+                    onClick={() => {
+                      // control
+                      router.push('/dashboard/nft-management/archive');
+                    }}
+                  />
+                </ShortcutContextMenu>
+              </>
+            )) || (
+              <>
+                <ShortcutContextMenuItem
+                  text="Recover"
+                  onClick={() => {
+                    // code for recover
+                  }}
+                />
+                <ShortcutContextMenuItem
+                  text="Remove from DUTCH0x"
+                  onClick={() => {
+                    // code for remove data from dutch0x
+                  }}
+                />
+              </>
+            )}
+          </ShortcutContextMenu>
+        )}
+      </DutchC.NFTFooter>
     </DutchC.NFTCard>
   );
 };

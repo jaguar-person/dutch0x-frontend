@@ -18,6 +18,7 @@ interface TableControlProps {
   options?: { name: string; value: string }[];
   selectedOption?: { name: string; value: string };
   searchInputPlaceholder?: string;
+  switchOptions?: { id: number; slug: string }[];
 
   isSwitch?: boolean;
   isSearchable?: boolean;
@@ -105,6 +106,16 @@ const TableControl: React.FC<TableControlProps> = (p: TableControlProps) => {
     id: 0,
     slug: 'Collections',
   });
+  const switchOptionsData = p.switchOptions || [
+    {
+      id: 0,
+      slug: 'Collections',
+    },
+    {
+      id: 1,
+      slug: 'NFTs',
+    },
+  ];
 
   return (
     <>
@@ -117,7 +128,7 @@ const TableControl: React.FC<TableControlProps> = (p: TableControlProps) => {
           )}
           {p.isSwitch && (
             <DutchC.TrackSwitchWrapper>
-              {switchOptions.map((option, i) => (
+              {switchOptionsData.map((option, i) => (
                 <OptionSwitch
                   key={i}
                   currentOption={switchOption}

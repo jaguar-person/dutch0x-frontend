@@ -16,7 +16,7 @@ export const TableControlRight = styled.div.attrs<{ className?: string }>({
 })``;
 
 export const TableWrapper = styled.div.attrs<{ className: string }>({
-  className: 'w-full text-sm flex',
+  className: 'w-full text-sm flex overflow-hidden',
 })``;
 
 // --- Table

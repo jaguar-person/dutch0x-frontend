@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useTheme } from 'next-themes';
+import clsx from 'clsx';
 
 import * as Icons from '@/common/Icons';
-
-import * as DutchC from './styles';
 
 type CopyNFTIdProps = {
   id: string;
@@ -25,9 +24,11 @@ const CopyNFTId: React.FC<CopyNFTIdProps> = ({
   const [timer, setTimer] = useState<NodeJS.Timeout>();
 
   return (
-    <DutchC.CopyNFTId
+    <button
+      className="reltive group rounded-md inline-flex items-center justify-center gap-x-1 px-2.5 py-0.5 w-fit h-fit max-w-full border border-black/10 backdrop-blur hover:bg-black/10 active:bg-black dark:border-white/10 dark:hover:bg-white/10 dark:active:bg-white/50"
       onClick={(e) => {
         e.stopPropagation();
+        navigator.clipboard.writeText(id);
         return onClick;
       }}
       onMouseDown={(e) => {
@@ -46,14 +47,21 @@ const CopyNFTId: React.FC<CopyNFTIdProps> = ({
         setTimer(
           setTimeout(() => {
             setStatus('default');
-          }, 1000)
+          }, 2000)
         );
       }}
     >
-      {status === 'copied' && (
-        <DutchC.CopyNFTIdTooltip>Copied</DutchC.CopyNFTIdTooltip>
-      )}
-      <DutchC.CopyNFTIdIconWrapper>
+      <div
+        className={clsx(
+          'absolute top-[-30px] bg-black/70 rounded-md backdrop-blur px-3 py-1 text-xs text-white dark:bg-white/30 transition-all delay-300 duration-1000',
+          status === 'copied'
+            ? 'opacity-100 visible'
+            : 'opacity-0 invisible'
+        )}
+      >
+        Copied
+      </div>
+      <div className="opacity-50 flex items-center justify-center group-hover:opacity-100">
         <Icons.IDocumentDuplicateIcon
           size="medium"
           color={
@@ -66,8 +74,9 @@ const CopyNFTId: React.FC<CopyNFTIdProps> = ({
               : 'white'
           }
         />
-      </DutchC.CopyNFTIdIconWrapper>
-      <DutchC.CopyNFTIdText
+      </div>
+      <div
+        className="text-xs truncate max-w-[170px]"
         color={
           theme === 'light'
             ? status === 'default'
@@ -79,8 +88,8 @@ const CopyNFTId: React.FC<CopyNFTIdProps> = ({
         }
       >
         {type === 'long' ? id : 'NFT id'}
-      </DutchC.CopyNFTIdText>
-    </DutchC.CopyNFTId>
+      </div>
+    </button>
   );
 };
 
