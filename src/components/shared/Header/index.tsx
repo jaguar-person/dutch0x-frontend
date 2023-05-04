@@ -35,6 +35,21 @@ enum TabNameEnum {
   BANK0X = 'BANK0X',
 }
 
+const sortList = [
+  {
+    name: 'Today',
+    value: 'today',
+  },
+  {
+    name: '1 Week',
+    value: 'oneWeek',
+  },
+  {
+    name: '2 Weeks',
+    value: 'twoWeeks',
+  },
+];
+
 const tabItems = [
   [
     {
@@ -180,7 +195,7 @@ const Header = ({
                       onChange={(e) => setSearchText?.(e.target.value)}
                       placeholder={searchPlaceHolder()}
                     />
-                    <SortSelect />
+                    <SortSelect title="Sort By" options={sortList} />
 
                     {isUrlListOrAll && (
                       <Switch
