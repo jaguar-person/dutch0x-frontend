@@ -86,7 +86,8 @@ export const ProfileMenuButton: React.FC<ProfileMenuButtonProps> = ({
 const ProfileMenu: React.FC<ProfileMenuProps> = (props) => {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const { isConnected } = useAppSelector((state) => state.webAppReducer);
+  // const { isConnected } = useAppSelector((state) => state.webAppReducer);
+  const isConnected = true;
 
   const dispatch = useAppDispatch();
 

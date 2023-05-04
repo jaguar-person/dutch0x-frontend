@@ -21,16 +21,29 @@ const useNFTHook = () => {
     return { account };
   }, shallowEqual);
 
-  const createDraftNFT = async (draftNFT: Omit<DraftNFTI, 'owner'>) => {
+  const upsertDraftNFT = async (
+    draftNFT: Omit<DraftNFTI, 'owner'>,
+    id?: string | null
+  ) => {
     try {
       assert(account, 'account === null');
-
-      const { response, data } = await draftNFTService.createDraftNFT({
+      const params = {
         ...draftNFT,
         owner: account,
-      });
-      if (data && data.data) return data.data;
-      else return null;
+      };
+
+      if (id) {
+        const { response, data } = await draftNFTService.updateDraftNFT(
+          params,
+          id
+        );
+        if (data && data.data) return data.data;
+        else return null;
+      } else {
+        const { response, data } = await draftNFTService.createDraftNFT(params);
+        if (data && data.data) return data.data;
+        else return null;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -71,6 +84,19 @@ const useNFTHook = () => {
     }
   };
 
+  const getDraftNftById = async (id: string) => {
+    try {
+      const { response, data } = await draftNFTService.getDraftNftById(id);
+
+      if (data && data.data) {
+        return data.data.nft as DraftNFTI;
+      }
+      return null;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const onMintModalClose = async (collectionAddress: string) => {
     const nft = await getCollectionDraftNFT(collectionAddress);
     if (nft) {
@@ -83,9 +109,10 @@ const useNFTHook = () => {
   };
 
   return {
-    createDraftNFT,
+    upsertDraftNFT,
     getCollectionDraftNFT,
     deleteDraftNFT,
+    getDraftNftById,
     onMintModalClose,
   };
 };

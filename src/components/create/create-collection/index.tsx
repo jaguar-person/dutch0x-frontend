@@ -12,6 +12,7 @@ import * as Icons from '@/common/Icons';
 import { useForm } from '@/hooks/useForm';
 import useCollectionHook from '@/hooks/useCollectionHook';
 import { ContentLayout } from '@/components/layout';
+import { toast } from 'react-toastify';
 
 const CreateCollectionHome: React.FC = () => {
   const [values, handleChange] = useForm({
@@ -23,16 +24,14 @@ const CreateCollectionHome: React.FC = () => {
   const [banner, setBanner] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { theme } = useTheme();
-  const [open, setOpen] = useState<boolean>(true);
-
   const { createCollection } = useCollectionHook();
 
-  const toggleGuide = () => {
-    setOpen((open) => !open);
-  };
-
   const handleCreateCollection = async () => {
+    if (tileUri === '') return toast.error('Tile image is required');
+    if (avatar === '') return toast.error('Avatar image is required');
+    if (banner === '') return toast.error('Banner image is required');
+    if (values.name === '') return toast.error('Collection name is required');
+
     setIsLoading(true);
     await createCollection({
       name: values.name,

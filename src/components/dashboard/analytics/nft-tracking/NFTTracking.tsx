@@ -217,8 +217,6 @@ const NFTTracking = () => {
         .map((item: any) => item.id);
 
       if (collectionIds.length > 0) {
-        if (!account) return;
-
         const nftsInfo = await loopringService.getUserNFTCollection({
           tokensAddress: collectionIds,
           offset: 0,
@@ -229,7 +227,7 @@ const NFTTracking = () => {
           ids = nftsInfo.nfts.map((nft) => nft.nftID);
         }
       } else {
-        ids = selectedTrackLists.map((item: any) => item.id);
+        ids = selectedTrackLists.map((item) => item.id);
       }
       getData();
       setNftIds(ids);
@@ -253,7 +251,7 @@ const NFTTracking = () => {
       <DutchC.ContentSwitch>
         <DutchC.ContentSwitchInner>
           <DutchC.TransactionSwitchWrapper>
-            <div className="bg-black/5 dark:bg-white/5">
+            <div className="bg-black/5 dark:bg-white/5 flex gap-1 items-center">
               {transOptions.map((option, i) => (
                 <OptionSwitch
                   key={i}
@@ -267,7 +265,7 @@ const NFTTracking = () => {
             </div>
           </DutchC.TransactionSwitchWrapper>
           <DutchC.DaySwitchWrapper>
-            <div className="pr-1 flex">
+            <div className="pr-1 flex gap-1">
               {dayOptions.map((option, i) => (
                 <OptionSwitch
                   key={i}
