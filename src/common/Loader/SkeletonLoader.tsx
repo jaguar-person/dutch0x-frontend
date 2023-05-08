@@ -6,7 +6,7 @@ type SkeletonLoaderProps = {
   count: number;
   height?: number | string;
   loading: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 } & SkeletonProps;
 
 const SkeletonLoader = (props: SkeletonLoaderProps) => {

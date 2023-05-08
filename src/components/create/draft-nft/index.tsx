@@ -72,7 +72,6 @@ const CreateDraftNFTHome: React.FC = () => {
       const id = query?.edit;
       if (id) {
         const nft = await getDraftNftById(String(id));
-        console.log(nft);
 
         if (nft) {
           const properties = JSON.parse(nft.properties);

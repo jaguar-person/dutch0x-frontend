@@ -3,6 +3,10 @@ import { NFTI, UserListI } from '@/types';
 import NFTListByCard from './NFTListByCard';
 import NFTListByTable from './NFTListByTable';
 import useNFTManagement from '@/hooks/useNFTManagement';
+import { useAppSelector } from '@/redux/store';
+import { shallowEqual } from 'react-redux';
+import { WebAppReducerI } from '@/ducks';
+import { SkeletonLoader } from '@/common/Loader';
 
 interface NFTListProps {
   tableListSwtich: number;
@@ -17,10 +21,19 @@ const NFTLists: React.FC<NFTListProps> = ({
 }): JSX.Element => {
   const { getUserNftList } = useNFTManagement();
   const [NFTs, setNFTs] = useState<UserListI[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const { account } = useAppSelector((state) => {
+    const { account } = state.webAppReducer as WebAppReducerI;
+    return { account };
+  }, shallowEqual);
+
 
   useEffect(() => {
+    if (!account) return;
     (async () => {
-      const lists = await getUserNftList('');
+      setLoading(true);
+      const lists = await getUserNftList(account);
+      setLoading(false);
       if (lists) {
         const userList = lists.map((list) => {
           const imageUrls = list.nfts.map((nft) => nft.image);
@@ -30,7 +43,11 @@ const NFTLists: React.FC<NFTListProps> = ({
         setNFTs(userList);
       }
     })();
-  }, []);
+  }, [account]);
+
+  if (loading) {
+    return <SkeletonLoader count={2} width="80vw" height={200} loading={true} />
+  }
 
   if (tableListSwtich)
     return (

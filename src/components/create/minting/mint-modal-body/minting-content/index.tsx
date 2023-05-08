@@ -65,7 +65,7 @@ const Minting: React.FC<MintModalPropsI> = ({
     dispatch(setMintingNfts(nfts));
   }, [selectedDraftNFTs.length, isMintModalIsOpen]);
 
-  useEffect(() => {}, [mintingNfts]);
+  useEffect(() => { }, [mintingNfts]);
 
   const handleStartMint = async () => {
     assert(account, 'account === null');
@@ -108,7 +108,6 @@ const Minting: React.FC<MintModalPropsI> = ({
           royaltyPercentage: nftData.royalty_percentage,
           nftTokenAddress: selectedDraftNft.collection,
         });
-        console.log(res);
         let status = MintStatusEnum.FAILED;
 
         if (res) {
@@ -120,7 +119,6 @@ const Minting: React.FC<MintModalPropsI> = ({
         await sleep(1000);
       } catch (error: any) {
         dispatch(updateMintNftStatus({ status: MintStatusEnum.FAILED, id: i }));
-        console.log(error);
       }
     }
 
