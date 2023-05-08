@@ -54,9 +54,7 @@ const CopyNFTId: React.FC<CopyNFTIdProps> = ({
       <div
         className={clsx(
           'absolute top-[-30px] bg-black/70 rounded-md backdrop-blur px-3 py-1 text-xs text-white dark:bg-white/30 transition-all delay-300 duration-1000',
-          status === 'copied'
-            ? 'opacity-100 visible'
-            : 'opacity-0 invisible'
+          status === 'copied' ? 'opacity-100 visible' : 'opacity-0 invisible'
         )}
       >
         Copied

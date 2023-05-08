@@ -68,8 +68,6 @@ const SideFilter: React.FC<SideFilterProps> = ({
 
     const nfts = await getUserNFTByAvailablity(account, min, available);
 
-    console.log({ nfts });
-
     if (nfts) dispatch(setManagementNFTs(nfts));
 
     if (type === MintRangeEnum.MIN) {
@@ -83,8 +81,6 @@ const SideFilter: React.FC<SideFilterProps> = ({
 
     const nfts = await getUserNFTByCollection(account, collectionAddress);
 
-    console.log({ nfts });
-
     if (nfts) dispatch(setManagementNFTs(nfts));
   };
 
@@ -93,12 +89,8 @@ const SideFilter: React.FC<SideFilterProps> = ({
 
     const nfts = await getUserNFTByAttribute(account, value);
 
-    console.log({ nfts });
-
     if (nfts) dispatch(setManagementNFTs(nfts));
   };
-
-  console.log({ nftAttributes });
 
   const hasNFTAttributes =
     nftAttributes && Object.keys(nftAttributes).length > 0;

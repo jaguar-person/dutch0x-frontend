@@ -9,8 +9,9 @@ import * as DutchC from './styles';
 
 interface Props {
   onAction: (saveData: boolean) => void;
+  isLoading: boolean;
 }
-const ProfileActions: React.FC<Props> = ({ onAction }) => {
+const ProfileActions: React.FC<Props> = ({ onAction, isLoading = false }) => {
   const [isUnsavedChanges, setUnsavedChanges] = useState(false);
   const [isDeleteAccount, setDeleteAccount] = useState(false);
   return (
@@ -25,7 +26,6 @@ const ProfileActions: React.FC<Props> = ({ onAction }) => {
       <DutchC.ProfileActionsRight>
         <OutlineButton
           onClick={() => {
-            onAction(false);
             setUnsavedChanges(true);
           }}
         >
@@ -33,18 +33,17 @@ const ProfileActions: React.FC<Props> = ({ onAction }) => {
         </OutlineButton>
         <Button
           onClick={() => {
-            onAction(true);
             setUnsavedChanges(true);
           }}
         >
-          Save Changes
+          {isLoading ? 'Saving Changes ...' : 'Save Changes'}
         </Button>
       </DutchC.ProfileActionsRight>
       <UnsavedChanges
         isUnsavedChanges={isUnsavedChanges}
-        onUnsavedChanges={() => {
+        onUnsavedChanges={(value) => {
           setUnsavedChanges(false);
-          onAction(true);
+          onAction(value);
         }}
       />
       <DeleteAccount

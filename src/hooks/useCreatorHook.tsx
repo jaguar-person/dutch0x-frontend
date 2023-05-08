@@ -15,16 +15,21 @@ const useCreatorHook = () => {
   }, shallowEqual);
 
   const updateCreate = async (creatorData: Profile) => {
-    const creatorId = getCookie('ACCOUNTID');
-    const { response, data } = await creatorApi.updateCreator(
-      creatorId as string,
-      creatorData
-    );
-    if (response.status != 200) return response?.error || 'Error occurred';
-    return data?.data;
+    return await creatorApi.updateCreator(account as string, creatorData);
   };
 
-  return { updateCreate };
+  const createProfile = async (creatorData: Profile) => {
+    return await creatorApi.createProfile({
+      ...creatorData,
+      userAddress: account as string,
+    } as Profile);
+  };
+
+  const getProfile = async () => {
+    return await creatorApi.getProfile(account as string);
+  };
+
+  return { updateCreate, createProfile, getProfile };
 };
 
 export default useCreatorHook;

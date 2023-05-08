@@ -5,7 +5,7 @@ import * as DutchC from './styles';
 
 interface UnsavedChangesProps {
   isUnsavedChanges: boolean;
-  onUnsavedChanges: () => void;
+  onUnsavedChanges: (value: boolean) => void;
 }
 
 const UnsavedChanges: React.FC<UnsavedChangesProps> = ({
@@ -14,7 +14,10 @@ const UnsavedChanges: React.FC<UnsavedChangesProps> = ({
 }) => {
   return (
     <Modal isOpen={isUnsavedChanges} className="max-w-xl">
-      <ModalHead title="Unsaved Changes" onClose={onUnsavedChanges} />
+      <ModalHead
+        title="Unsaved Changes"
+        onClose={() => onUnsavedChanges(false)}
+      />
       <ModalBody>
         <DutchC.AlertInner>
           <p>
@@ -22,10 +25,10 @@ const UnsavedChanges: React.FC<UnsavedChangesProps> = ({
             with changes?
           </p>
           <DutchC.ActionsWrapper>
-            <OutlineButton onClick={onUnsavedChanges}>
+            <OutlineButton onClick={() => onUnsavedChanges(false)}>
               Discard Changes
             </OutlineButton>
-            <Button>Save Changes</Button>
+            <Button onClick={() => onUnsavedChanges(true)}>Save Changes</Button>
           </DutchC.ActionsWrapper>
         </DutchC.AlertInner>
       </ModalBody>
