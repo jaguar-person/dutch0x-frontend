@@ -71,21 +71,8 @@ export const CreateContentDraftNFTs = styled.div.attrs({
 
 // --- Breadcrumb
 export const BreadcrumbWrapper = styled.div.attrs({
-  className: 'flex items-center my-4',
-})`
-  & > * + * {
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 40%;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background-color: var(--breadcrumb-color);
-    }
-  }
-`;
+  className: 'flex min-h-[56px] w-full',
+})``;
 
 export const BreadcrumbItem = styled(Link).attrs({
   className:

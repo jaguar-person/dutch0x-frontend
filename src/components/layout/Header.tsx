@@ -110,7 +110,7 @@ const Header: React.FC = () => {
 
   const fetchStatus = async () => {
     const res = await new LoopringApi().getStatusCheck();
-    if (res.data.message === 'success') return setStatus('ACTIVE');
+    if (res.data?.message === 'success') return setStatus('ACTIVE');
     return setStatus('INACTIVE');
   };
 
@@ -184,11 +184,6 @@ const Header: React.FC = () => {
 
         <DutchC.RightActions>
           <Badge status={status} />
-
-          <IconButton
-            icon={theme === 'light' ? 'moon' : 'sun'}
-            onClick={toggleTheme}
-          />
 
           {(isConnected && (
             <GasInfo setAverageFee={setAverageFee} {...GasInfoMockData} />

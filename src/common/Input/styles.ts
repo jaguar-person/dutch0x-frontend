@@ -72,13 +72,13 @@ export const ShortCut = styled.div.attrs({
 })``;
 
 // --- Text Area
-export const TextAreaWrapper = styled.div.attrs({
-  className: 'relative flex flex-col space-y-1',
+export const TextAreaWrapper = styled.div.attrs<{ className: string }>({
+  className: 'relative flex flex-col space-y-1 h-full',
 })``;
 
 export const Area = styled.textarea.attrs({
   className:
-    'outline-none w-full inline-flex items-center justify-center min-h-[160px] border border-black/10 rounded-md px-4 py-2 text-sm peer hover:border-black placeholder:text-black/70 focus:border-black dark:border-white/10 dark:bg-dark-surface dark:placeholder:text-white/70 transition',
+    'outline-none w-full flex flex-grow items-center justify-center border border-black/10 rounded-md px-4 py-2 text-sm peer hover:border-black placeholder:text-black/70 focus:border-black dark:border-white/10 dark:bg-dark-surface dark:placeholder:text-white/70 transition',
 })``;
 
 export const TextAreaHeader = styled.div.attrs({

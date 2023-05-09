@@ -104,6 +104,7 @@ const CreateCollectionHome: React.FC = () => {
           name="Description"
           required
           placeholder="Text"
+          className="w-1/2"
         />
 
         {/* Create */}

@@ -119,13 +119,13 @@ const ProfileMenu: React.FC<ProfileMenuProps> = (props) => {
           setIsOpen(!isOpen);
         }}
         isOpen={isOpen}
-        avatar={props.avatar}
+        avatar={props.avatar} 
         walletAddress={props.walletAddress}
         theme={theme}
       />
       <DutchC.ProfileMenu isOpen={isOpen}>
-        {isConnected ? (
-          <div className="flex flex-col gap-y-3">
+        {!isConnected ? (
+          <div className="flex flex-col gap-y-3 w-full">
             <DutchC.ProfileMenuHeaderWrapper href="/profile">
               <DutchC.ProfileMenuHeaderContent>
                 <Image

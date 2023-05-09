@@ -32,7 +32,7 @@ export const THeadWrapper = styled.thead.attrs<{ className: string }>({
 
 // --- TBody
 export const TBodyWrapper = styled.tbody.attrs<{ className: string }>({
-  className: 'divide-y dark:divide-white/10',
+  className: 'divide-y dark:divide-white/10 relative',
 })``;
 
 // --- TR

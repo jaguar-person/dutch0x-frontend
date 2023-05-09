@@ -134,7 +134,7 @@ export const FromNFTs = () => {
   return (
     <DutchC.FromNFTsWrapper>
       <DutchC.FromNFTsNavbar>
-        <SearchInput className="flex-grow" />
+        <SearchInput className="flex-1" />
         <SortSelect title="Sort By" options={sortList} />
         <Pagination
           onChange={() => {

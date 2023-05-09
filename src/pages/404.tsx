@@ -1,9 +1,11 @@
-import { Button } from '@/common';
 import react from 'react';
+import { Button } from '@/common';
+import { useRouter } from 'next/router';
 import NotFoundImage from '../assets/not_found.png';
 import Image from 'next/image';
 
 const NotFound = () => {
+  const router = useRouter();
   return (
     <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-center">
       <Image
@@ -17,7 +19,13 @@ const NotFound = () => {
         <p className="font-bold text-5xl">Page not found</p>
         <p className="text-xl">Error code: 404</p>
       </div>
-      <Button>Go to Dashboard</Button>
+      <Button
+        onClick={() => {
+          router.push('/');
+        }}
+      >
+        Go to Dashboard
+      </Button>
     </div>
   );
 };

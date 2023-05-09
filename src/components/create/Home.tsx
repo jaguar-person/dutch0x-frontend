@@ -73,10 +73,6 @@ const CreateHome: React.FC = () => {
     [draftNFTs]
   );
 
-  const toggleGuide = () => {
-    setOpen((open) => !open);
-  };
-
   const handleMintAll = () => {
     const updatedNfts = draftNFTs.map((draftNFT: DraftNFTResponseI) => {
       return { ...draftNFT, selected: true };
@@ -122,19 +118,19 @@ const CreateHome: React.FC = () => {
         </DutchC.CreateContentHeaderActions>
       </DutchC.CreateContentHeader>
       <DutchC.CreateContentBody>
+        <SearchInput />
         {/* No items */}
-        {/* <DutchC.CreateContentNoItems>
-              <span className="dark:text-white/50">No items to show here.</span>
-            </DutchC.CreateContentNoItems> */}
+        <DutchC.CreateContentNoItems>
+          <span className="dark:text-white/50">No items to show here.</span>
+        </DutchC.CreateContentNoItems>
         {/* If some draft nfts are avaiable to show */}
         <DutchC.CreateContentTools>
-          <SearchInput />
-
-          {isDraftNtSelected && (
-            <Button onClick={() => dispatch(setMintModalIsOpen(true))}>
-              Mint Selected NFTs
-            </Button>
-          )}
+          <Button
+            onClick={() => dispatch(setMintModalIsOpen(true))}
+            disabled={isDraftNtSelected ? false : true}
+          >
+            Mint Selected NFTs
+          </Button>
           {draftNFTs.length > 0 && (
             <Button onClick={handleMintAll}>Mint all NFTs</Button>
           )}

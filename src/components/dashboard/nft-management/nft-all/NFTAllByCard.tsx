@@ -14,6 +14,11 @@ const NFTAllByCard: React.FC<NFTAllByCardProps> = ({
 }): JSX.Element => {
   return (
     <DutchC.NFTCardWrapper>
+      {!NFTs.length && (
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-0 dark:text-white">
+          No NFTs
+        </div>
+      )}
       {typeof NFTs === 'object' &&
         NFTs.map((nft) => (
           <div key={nft.nftId} className="w-[230px]">

@@ -51,6 +51,11 @@ const NFTManagementTable: React.FC<TableProps> = ({
         </TR>
       </THead>
       <TBody>
+        {!nftList.length && (
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-0 dark:text-white">
+            No NFTs
+          </div>
+        )}
         {nftList.map((list, index) => {
           return (
             <TR

@@ -194,6 +194,7 @@ const Header = ({
                     <SearchInput
                       onChange={(e) => setSearchText?.(e.target.value)}
                       placeholder={searchPlaceHolder()}
+                      className="flex-1"
                     />
                     <SortSelect title="Sort By" options={sortList} />
 

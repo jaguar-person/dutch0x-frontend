@@ -18,21 +18,25 @@ const TextArea: React.FC<TextAreaProps> = ({
   ...rest
 }) => {
   return (
-    <DutchC.TextAreaWrapper>
-      {label && (
-        <DutchC.TextAreaHeader>
-          <DutchC.TextAreaLabelWrapper>
-            <DutchC.TextAreaLabel>{label}</DutchC.TextAreaLabel>
-            {optional && (
-              <DutchC.TextAreaOptional>({optional})</DutchC.TextAreaOptional>
-            )}
-          </DutchC.TextAreaLabelWrapper>
+    <div className={className}>
+      <DutchC.TextAreaWrapper>
+        {label && (
+          <DutchC.TextAreaHeader>
+            <DutchC.TextAreaLabelWrapper>
+              <DutchC.TextAreaLabel>{label}</DutchC.TextAreaLabel>
+              {optional && (
+                <DutchC.TextAreaOptional>({optional})</DutchC.TextAreaOptional>
+              )}
+            </DutchC.TextAreaLabelWrapper>
 
-          {isCounter && <DutchC.TextAreaCounter>0/100</DutchC.TextAreaCounter>}
-        </DutchC.TextAreaHeader>
-      )}
-      <DutchC.Area {...rest} />
-    </DutchC.TextAreaWrapper>
+            {isCounter && (
+              <DutchC.TextAreaCounter>0/100</DutchC.TextAreaCounter>
+            )}
+          </DutchC.TextAreaHeader>
+        )}
+        <DutchC.Area {...rest} />
+      </DutchC.TextAreaWrapper>
+    </div>
   );
 };
 
