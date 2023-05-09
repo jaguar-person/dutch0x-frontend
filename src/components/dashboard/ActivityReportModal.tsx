@@ -41,6 +41,7 @@ const sortOptions = [
 ];
 
 interface ReportModalProps {
+  isOpen: boolean;
   nftInfo?: {
     total: number;
     success: number;
@@ -55,11 +56,12 @@ interface ReportModalProps {
 }
 
 const ActivityReportModal: React.FC<ReportModalProps> = ({
+  isOpen,
   nftInfo,
   gas,
   nfts,
 }) => {
-  const [isOpenReportModal, setIsOpenReportModal] = useState(true);
+  const [isOpenReportModal, setIsOpenReportModal] = useState(isOpen);
   return (
     <Modal isOpen={isOpenReportModal}>
       <ModalHead
@@ -75,29 +77,41 @@ const ActivityReportModal: React.FC<ReportModalProps> = ({
             <p className="font-bold text-3xl">Mint NFTs</p>
             <div className="flex gap-4">
               <div className="flex gap-2 text-sm">
-                <p className="text-black/50 font-medium">Total NFTs</p>
+                <p className="text-black/50 dark:text-white/50 font-medium">
+                  Total NFTs
+                </p>
                 <p className="font-bold">7</p>
               </div>
               <div className="flex gap-2 text-sm">
-                <p className="text-black/50 font-medium">Success</p>
+                <p className="text-black/50 dark:text-white/50 font-medium">
+                  Success
+                </p>
                 <p className="font-bold">6</p>
               </div>
               <div className="flex gap-2 text-sm">
-                <p className="text-black/50 font-medium">Failed</p>
+                <p className="text-black/50 dark:text-white/50 font-medium">
+                  Failed
+                </p>
                 <p className="font-bold">1</p>
               </div>
             </div>
             <div className="flex gap-4">
               <div className="flex gap-2 text-sm">
-                <p className="text-black/50 font-medium">Total Gas</p>
+                <p className="text-black/50 dark:text-white/50 font-medium">
+                  Total Gas
+                </p>
                 <p className="font-bold">0.00033 ETH</p>
               </div>
               <div className="flex gap-2 text-sm">
-                <p className="text-black/50 font-medium">Started at</p>
+                <p className="text-black/50 dark:text-white/50 font-medium">
+                  Started at
+                </p>
                 <p className="font-bold">2022-09-13 08:57:15 PST</p>
               </div>
               <div className="flex gap-2 text-sm">
-                <p className="text-black/50 font-medium">Completed in</p>
+                <p className="text-black/50 dark:text-white/50 font-medium">
+                  Completed in
+                </p>
                 <p className="font-bold">00:02:33</p>
               </div>
             </div>
@@ -137,7 +151,7 @@ const ActivityReportModal: React.FC<ReportModalProps> = ({
                     <TD>
                       <div className="flex items-center gap-1 px-2 py-0.5 border border-black/10 rounded-md">
                         <IDocument color="dark-gray" />
-                        <div className="w-[100px] overflow-hidden overflow-ellipsis font-normal text-sm text-black/70">
+                        <div className="w-[100px] overflow-hidden overflow-ellipsis font-normal text-sm text-black/70 dark:text-white/70">
                           {item.nftId}
                         </div>
                       </div>

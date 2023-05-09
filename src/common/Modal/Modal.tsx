@@ -6,6 +6,8 @@ import { IconButton } from '../Button';
 import { IconType } from '../Icons';
 import * as DutchC from './styles';
 
+import { IXMark } from '../Icons';
+
 // types
 interface ModalProps {
   children: React.ReactNode;
@@ -58,7 +60,9 @@ export const ModalHead: React.FC<ModalHeadProps> = ({
         <DutchC.ModalTitle>{title}</DutchC.ModalTitle>
         {children}
       </DutchC.ModalTitleWrapper>
-      <IconButton icon="close" onClick={onClose} />
+      <div onClick={onClose} className="cursor-pointer">
+        <IXMark />
+      </div>
     </DutchC.ModalHeadWrapper>
   );
 };

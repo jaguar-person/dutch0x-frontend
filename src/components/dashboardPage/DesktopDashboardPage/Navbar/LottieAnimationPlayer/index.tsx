@@ -59,7 +59,7 @@ const LottieAnimationPlayer: React.FC<IProps> = ({
           autoplay={false}
         />
       </div>
-      <span className="font-bold font-Satoshi text-base text-black">
+      <span className="font-bold font-Satoshi text-base text-black dark:text-white">
         {name}
       </span>
     </div>
