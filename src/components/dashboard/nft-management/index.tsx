@@ -223,15 +223,15 @@ const NFTManagement: React.FC = () => {
                 <SortSelect title="Sort By" options={sortList} />
                 {(currentWideFilter === 'ALL' ||
                   currentWideFilter === 'LIST') && (
-                  <Switch
-                    leftIcon="squares2X2"
-                    rightIcon="bars3"
-                    currentSwitch={tableListSwtich}
-                    onSwitch={(status: number) => {
-                      setTableListSwitch(status);
-                    }}
-                  />
-                )}
+                    <Switch
+                      leftIcon="squares2X2"
+                      rightIcon="bars3"
+                      currentSwitch={tableListSwtich}
+                      onSwitch={(status: number) => {
+                        setTableListSwitch(status);
+                      }}
+                    />
+                  )}
               </DutchC.NFTManagementSubToolLeft>
               <DutchC.NFTManagementSubToolRight>
                 {(currentWideFilter === 'ALL' ||
@@ -262,21 +262,21 @@ const NFTManagement: React.FC = () => {
                 {(currentWideFilter === 'ALL' ||
                   currentWideFilter === 'LIST' ||
                   currentWideFilter === 'ARCHIVE') && (
-                  <Button
-                    className=""
-                    disabled={isSynced ? false : true}
-                    leftIcon={currentWideFilter === 'LIST' ? 'plus' : undefined}
-                    onClick={() => {
-                      setShowCreatListModal(true);
-                    }}
-                  >
-                    {currentWideFilter === 'ARCHIVE'
-                      ? 'Recover'
-                      : currentWideFilter === 'LIST'
-                      ? 'Create a List'
-                      : 'Add to List'}
-                  </Button>
-                )}
+                    <Button
+                      className=""
+                      disabled={isSynced ? false : true}
+                      leftIcon={currentWideFilter === 'LIST' ? 'plus' : undefined}
+                      onClick={() => {
+                        setShowCreatListModal(true);
+                      }}
+                    >
+                      {currentWideFilter === 'ARCHIVE'
+                        ? 'Recover'
+                        : currentWideFilter === 'LIST'
+                          ? 'Create a List'
+                          : 'Add to List'}
+                    </Button>
+                  )}
               </DutchC.NFTManagementSubToolRight>
             </DutchC.NFTManagementSubTool>
 

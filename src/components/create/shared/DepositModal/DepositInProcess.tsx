@@ -15,7 +15,6 @@ export const DepositInProcessModal: React.FC<DepositInProcessModalProps> = ({
   const [cnt, setCnt] = useState(0);
   setTimeout(() => {
     setCnt((cnt + 1) % 4);
-    console.log(cnt);
   }, 1000);
 
   return (
@@ -62,9 +61,7 @@ export const DepositInProcessModal: React.FC<DepositInProcessModalProps> = ({
               <IconButton
                 icon="iarrow-up-right"
                 className="!w-4 !h-4 border border-black/20 !rounded-md"
-                onClick={() => {
-                  console.log('clicked');
-                }}
+                onClick={() => {}}
               />
             </div>
           </div>

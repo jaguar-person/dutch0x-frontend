@@ -4,9 +4,9 @@ export type Profile = {
   email?: string;
   username?: string;
   timezone?: string;
-  twitter?: string;
-  discord?: string;
-  instagram?: string;
-  tiktok?: string;
-  reddit?: string;
+  twitterHandle?: string;
+  discordHandle?: string;
+  instagramHandle?: string;
+  tiktokHandle?: string;
+  redditHandle?: string;
 };

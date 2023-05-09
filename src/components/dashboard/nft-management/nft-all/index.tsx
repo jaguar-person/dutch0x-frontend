@@ -5,150 +5,39 @@ import NFTAllByTable from './NFTALLByTable';
 import useNFTManagement from '@/hooks/useNFTManagement';
 import { useAppSelector } from '@/redux/store';
 import { shallowEqual } from 'react-redux';
+import { WebAppReducerI } from '@/ducks';
+import { DynamicLoader, SkeletonLoader } from '@/common/Loader';
 
 interface NFTAllProps {
   tableListSwtich: number;
 }
 
-const mockList = [
-  {
-    sr: '001',
-    name: 'Red Onion',
-    collection: '🍎🍌🍍The Fruit Salad Game🍆🥦🥕',
-    availableCount: 29,
-    mintCount: 1000,
-    burned: false,
-    nftId: '0x314c44cae272f9afb555de3b485c7686c3823ac2b13fa0b16eafcbaf9e76c0b8',
-    selected: true,
-    img: '/images/rice.webp',
-  },
-  {
-    sr: '001',
-    name: 'Red Onion',
-    collection: '🍎🍌🍍The Fruit Salad Game🍆🥦🥕',
-    availableCount: 29,
-    mintCount: 1000,
-    burned: false,
-    nftId: '0x314c44cae272f9afb555de3b485c7686c3823ac2b13fa0b16eafcbaf9e76c0b8',
-    selected: true,
-    img: '/images/rice.webp',
-  },
-  {
-    sr: '001',
-    name: 'Red Onion',
-    collection: '🍎🍌🍍The Fruit Salad Game🍆🥦🥕',
-    availableCount: 29,
-    mintCount: 1000,
-    burned: false,
-    nftId: '0x314c44cae272f9afb555de3b485c7686c3823ac2b13fa0b16eafcbaf9e76c0b8',
-    selected: true,
-    img: '/images/rice.webp',
-  },
-  {
-    sr: '001',
-    name: 'Red Onion',
-    collection: '🍎🍌🍍The Fruit Salad Game🍆🥦🥕',
-    availableCount: 29,
-    mintCount: 1000,
-    burned: false,
-    nftId: '0x314c44cae272f9afb555de3b485c7686c3823ac2b13fa0b16eafcbaf9e76c0b8',
-    selected: true,
-    img: '/images/rice.webp',
-  },
-  {
-    sr: '001',
-    name: 'Red Onion',
-    collection: '🍎🍌🍍The Fruit Salad Game🍆🥦🥕',
-    availableCount: 29,
-    mintCount: 1000,
-    burned: false,
-    nftId: '0x314c44cae272f9afb555de3b485c7686c3823ac2b13fa0b16eafcbaf9e76c0b8',
-    selected: true,
-    img: '/images/rice.webp',
-  },
-  {
-    sr: '001',
-    name: 'Red Onion',
-    collection: '🍎🍌🍍The Fruit Salad Game🍆🥦🥕',
-    availableCount: 29,
-    mintCount: 1000,
-    burned: false,
-    nftId: '0x314c44cae272f9afb555de3b485c7686c3823ac2b13fa0b16eafcbaf9e76c0b8',
-    selected: true,
-    img: '/images/rice.webp',
-  },
-  {
-    sr: '001',
-    name: 'Red Onion',
-    collection: '🍎🍌🍍The Fruit Salad Game🍆🥦🥕',
-    availableCount: 29,
-    mintCount: 1000,
-    burned: false,
-    nftId: '0x314c44cae272f9afb555de3b485c7686c3823ac2b13fa0b16eafcbaf9e76c0b8',
-    selected: true,
-    img: '/images/rice.webp',
-  },
-  {
-    sr: '001',
-    name: 'Red Onion',
-    collection: '🍎🍌🍍The Fruit Salad Game🍆🥦🥕',
-    availableCount: 29,
-    mintCount: 1000,
-    burned: false,
-    nftId: '0x314c44cae272f9afb555de3b485c7686c3823ac2b13fa0b16eafcbaf9e76c0b8',
-    selected: true,
-    img: '/images/rice.webp',
-  },
-  {
-    sr: '001',
-    name: 'Red Onion',
-    collection: '🍎🍌🍍The Fruit Salad Game🍆🥦🥕',
-    availableCount: 29,
-    mintCount: 1000,
-    burned: false,
-    nftId: '0x314c44cae272f9afb555de3b485c7686c3823ac2b13fa0b16eafcbaf9e76c0b8',
-    selected: true,
-    img: '/images/rice.webp',
-  },
-  {
-    sr: '001',
-    name: 'Red Onion',
-    collection: '🍎🍌🍍The Fruit Salad Game🍆🥦🥕',
-    availableCount: 29,
-    mintCount: 1000,
-    burned: false,
-    nftId: '0x314c44cae272f9afb555de3b485c7686c3823ac2b13fa0b16eafcbaf9e76c0b8',
-    selected: true,
-    img: '/images/rice.webp',
-  },
-];
 
 const NFTAll: React.FC<NFTAllProps> = ({ tableListSwtich }): JSX.Element => {
   const { getUserNfts } = useNFTManagement();
   const [NFTs, setNFTs] = useState<CreateNftManagementI[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const { accountInfo } = useAppSelector((state) => {
-    const { accountInfo } = state.webAppReducer;
-    return { accountInfo };
+  const { account } = useAppSelector((state) => {
+    const { account } = state.webAppReducer as WebAppReducerI;
+    return { account };
   }, shallowEqual);
 
   useEffect(() => {
-    (async () => {
-      if (accountInfo) {
-        setLoading(true);
-        const nfts = await getUserNfts(
-          accountInfo.accInfo.owner,
-          UsageStatusEnum.UNARCHIVED
-        );
+    if (!account) return;
+    handleGetNFTs();
+  }, [account])
 
-        if (nfts) {
-          setNFTs(nfts);
-          setLoading(false);
-        }
-      }
-    })();
-  }, [accountInfo?.accInfo.owner]);
+  const handleGetNFTs = async () => {
+    setLoading(true);
+    const nfts: CreateNftManagementI[] | null | undefined = await getUserNfts(account as string, UsageStatusEnum.UNARCHIVED);
+    setLoading(false);
+    if (nfts) {
+      setNFTs(nfts);
+    }
+  }
+
+
 
   const onNFTSelect = useCallback(
     (nftId: string) => {
@@ -166,6 +55,9 @@ const NFTAll: React.FC<NFTAllProps> = ({ tableListSwtich }): JSX.Element => {
     },
     [NFTs]
   );
+  if (loading) {
+    return <SkeletonLoader count={2} width="80vw" height={200} loading={true} />
+  }
 
   if (tableListSwtich)
     return <NFTAllByTable NFTs={NFTs} onNFTSelect={onNFTSelect} />;
