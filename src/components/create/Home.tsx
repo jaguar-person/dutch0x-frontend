@@ -125,12 +125,11 @@ const CreateHome: React.FC = () => {
         </DutchC.CreateContentNoItems>
         {/* If some draft nfts are avaiable to show */}
         <DutchC.CreateContentTools>
-          <Button
-            onClick={() => dispatch(setMintModalIsOpen(true))}
-            disabled={isDraftNtSelected ? false : true}
-          >
-            Mint Selected NFTs
-          </Button>
+          {isDraftNtSelected && (
+            <Button onClick={() => dispatch(setMintModalIsOpen(true))}>
+              Mint Selected NFTs
+            </Button>
+          )}
           {draftNFTs.length > 0 && (
             <Button onClick={handleMintAll}>Mint all NFTs</Button>
           )}
